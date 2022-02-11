@@ -2,3 +2,4 @@
 master.ini
 worker.ini
 *.swp
+.vagrant

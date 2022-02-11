@@ -63,17 +63,17 @@ build {
   name    = "buildbot-worker-windows-server-2019"
 
   provisioner "file" {
-    sources     = [ "../../base.ps1",
-                    "../../msibuilder.ps1",
-                    "../../python.ps1",
-                    "../../pip.ps1",
-                    "../../build-deps.ps1",
+    sources     = [ "../scripts/base.ps1",
+                    "../scripts/msibuilder.ps1",
+                    "../scripts/python.ps1",
+                    "../scripts/pip.ps1",
+                    "../scripts/build-deps.ps1",
                     "../authenticode.pfx",
-                    "import-signing-cert.ps1",
-                    "create-buildbot-user.ps1",
-                    "get-openvpn-vagrant.ps1",
-                    "../../buildbot.ps1",
-                    "../../vsbuildtools.ps1"]
+                    "../scripts/import-signing-cert.ps1",
+                    "../scripts/create-buildbot-user.ps1",
+                    "../scriptsget-openvpn-vagrant.ps1",
+                    "../scripts/buildbot.ps1",
+                    "../scripts/vsbuildtools.ps1"]
     destination = "C:/Windows/Temp/"
   }
   provisioner "powershell" {
