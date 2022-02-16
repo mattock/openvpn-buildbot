@@ -7,6 +7,10 @@ packer {
   }
 }
 
+variable "buildbot_authenticode_cert" {
+  type = string
+}
+
 variable "buildbot_authenticode_password" {
   type = string
 }
@@ -68,7 +72,7 @@ build {
                     "../scripts/python.ps1",
                     "../scripts/pip.ps1",
                     "../scripts/build-deps.ps1",
-                    "../authenticode.pfx",
+                    var.buildbot_authenticode_cert,
                     "../scripts/import-signing-cert.ps1",
                     "../scripts/create-buildbot-user.ps1",
                     "../scriptsget-openvpn-vagrant.ps1",

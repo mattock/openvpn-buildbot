@@ -176,6 +176,7 @@ or in environment variables. Here's an example of the latter approach:
     PKR_VAR_buildbot_windows_server_2019_worker_password=<buildbot-worker-password>
     PKR_VAR_buildbot_windows_server_2019_ec2_region=eu-central-1
     PKR_VAR_buildbot_windows_server_2019_buildbot_user_password=<buildbot-windows-user-password>
+    PKR_VAR_buildbot_authenticode_cert=<authenticode-certificate-file-path>
     PKR_VAR_buildbot_authenticode_password=<password-for-authenticode-certificate>
     PKR_VAR_buildmaster_address=<buildmaster-ip-address>
     PKR_VAR_buildbot_windows_server_2019_winrm_password=<windows-admin-password>
