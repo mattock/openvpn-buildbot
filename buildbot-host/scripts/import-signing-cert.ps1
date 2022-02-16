@@ -4,4 +4,6 @@ param ([string] $password)
 #
 # <https://social.technet.microsoft.com/Forums/en-US/a07dab5a-3ad2-4982-84c1-28f7d4ba77f9/import-certificate-into-certcurrentusermy>
 #
-Import-PfxCertificate -FilePath C:\Windows\Temp\authenticode.pfx -CertstoreLocation Cert:\LocalMachine\My -Password (ConvertTo-SecureString -String $password -Force -AsPlainText)
+$certfile = (Get-ChildItem C:\Windows\Temp -Filter *.pfx).fullname
+
+Import-PfxCertificate -FilePath $certfile -CertstoreLocation Cert:\LocalMachine\My -Password (ConvertTo-SecureString -String $password -Force -AsPlainText)
