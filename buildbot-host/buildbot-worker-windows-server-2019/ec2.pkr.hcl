@@ -75,7 +75,7 @@ build {
                     var.buildbot_authenticode_cert,
                     "../scripts/import-signing-cert.ps1",
                     "../scripts/create-buildbot-user.ps1",
-                    "../scriptsget-openvpn-vagrant.ps1",
+                    "../scripts/get-openvpn-vagrant.ps1",
                     "../scripts/buildbot.ps1",
                     "../scripts/vsbuildtools.ps1"]
     destination = "C:/Windows/Temp/"
