@@ -25,10 +25,16 @@ if (-Not (Test-Path "${workdir}\vcpkg")) {
 # Bootstrap vcpkg
 & "${workdir}\vcpkg\bootstrap-vcpkg.bat"
 
+# Update ports
+cd "${workdir}\vcpkg"
+& git.exe pull
+
+cd $workdir
+
 # Install OpenVPN build dependencies
 $architectures = @('x64','x86','arm64')
 foreach ($arch in $architectures) {
-    & "${workdir}\vcpkg\vcpkg.exe" --overlay-ports="${workdir}\openvpn\contrib\vcpkg-ports" --overlay-triplets="${workdir}\openvpn\contrib\vcpkg-triplets" install "lz4:${arch}-windows-ovpn" "lzo:${arch}-windows-ovpn" "openssl-windows:${arch}-windows-ovpn" "pkcs11-helper:${arch}-windows-ovpn" "tap-windows6:${arch}-windows-ovpn"
+    & "${workdir}\vcpkg\vcpkg.exe" --overlay-ports="${workdir}\openvpn\contrib\vcpkg-ports" --overlay-triplets="${workdir}\openvpn\contrib\vcpkg-triplets" install "lz4:${arch}-windows-ovpn" "lzo:${arch}-windows-ovpn" "openssl3:${arch}-windows-ovpn" "pkcs11-helper:${arch}-windows-ovpn" "tap-windows6:${arch}-windows-ovpn"
 }
 
 # Ensure that OpenVPN build can find the dependencies
