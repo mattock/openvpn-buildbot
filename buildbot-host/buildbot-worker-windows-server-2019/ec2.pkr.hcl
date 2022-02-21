@@ -73,7 +73,6 @@ build {
                     "../scripts/pip.ps1",
                     "../scripts/build-deps.ps1",
                     var.buildbot_authenticode_cert,
-                    "../scripts/import-signing-cert.ps1",
                     "../scripts/create-buildbot-user.ps1",
                     "../scripts/get-openvpn-vagrant.ps1",
                     "../scripts/buildbot.ps1",
@@ -82,9 +81,6 @@ build {
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/base.ps1"]
-  }
-  provisioner "powershell" {
-    inline = ["C:/Windows/Temp/import-signing-cert.ps1 -password ${var.buildbot_authenticode_password}"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/msibuilder.ps1 -workdir C:\\Windows\\Temp"]
