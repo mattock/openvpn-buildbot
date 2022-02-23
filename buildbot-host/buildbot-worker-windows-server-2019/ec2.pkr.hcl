@@ -40,8 +40,11 @@ variable "buildmaster_address" {
   type = string
 }
 
-source "amazon-ebs" "buildbot-worker-windows-server-2019" {
-  ami_name         = "buildbot-worker-windows-server-2019-2"
+variable "jenkinsmaster_address" {
+  type = string
+}
+
+source "amazon-ebs" "windows-server-2019" {
   communicator     = "winrm"
   force_deregister = true
   instance_type    = "t3a.large"
@@ -70,7 +73,10 @@ source "amazon-ebs" "buildbot-worker-windows-server-2019" {
 }
 
 build {
-  name    = "buildbot-worker-windows-server-2019"
+  source "amazon-ebs.windows-server-2019" {
+    name     = "buildbot-worker-windows-server-2019"
+    ami_name = "buildbot-worker-windows-server-2019-3"
+  }
 
   provisioner "file" {
     sources     = [ "../scripts/",
@@ -119,8 +125,50 @@ build {
     # make sure to run user data scripts on first boot from AMI
     inline = ["C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/InitializeInstance.ps1 -Schedule"]
   }
+}
 
-  sources = [
-    "source.amazon-ebs.buildbot-worker-windows-server-2019"
-  ]
+build {
+  source "amazon-ebs.windows-server-2019" {
+    name     = "jenkins-agent-windows-server-2019"
+    ami_name = "jenkins-agent-windows-server-2019-1"
+  }
+
+  provisioner "file" {
+    sources      = [ "../scripts/" ]
+    destination  = "C:/Windows/Temp/"
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/base.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/git.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/cmake.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/python.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/pip.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/vcpkg.ps1 -workdir C:\\Jenkins"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/vsbuildtools.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/create-buildbot-user.ps1 -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
+  }
+  # Required for some installers
+  provisioner "windows-restart" {}
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/jenkins-agent.ps1 -workdir C:\\Jenkins -jenkins ${var.jenkinsmaster_address} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
+  }
+  provisioner "powershell" {
+    # make sure to run user data scripts on first boot from AMI
+    inline = ["C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/InitializeInstance.ps1 -Schedule"]
+  }
+
 }
