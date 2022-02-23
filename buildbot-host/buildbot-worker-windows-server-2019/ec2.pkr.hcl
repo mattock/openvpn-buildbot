@@ -67,20 +67,18 @@ build {
   name    = "buildbot-worker-windows-server-2019"
 
   provisioner "file" {
-    sources     = [ "../scripts/base.ps1",
-                    "../scripts/msibuilder.ps1",
-                    "../scripts/python.ps1",
-                    "../scripts/pip.ps1",
-                    "../scripts/build-deps.ps1",
-                    var.buildbot_authenticode_cert,
-                    "../scripts/create-buildbot-user.ps1",
-                    "../scripts/get-openvpn-vagrant.ps1",
-                    "../scripts/buildbot.ps1",
-                    "../scripts/vsbuildtools.ps1"]
+    sources     = [ "../scripts/",
+                    var.buildbot_authenticode_cert ]
     destination = "C:/Windows/Temp/"
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/base.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/git.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/cmake.ps1"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/msibuilder.ps1 -workdir C:\\Windows\\Temp"]
@@ -93,6 +91,9 @@ build {
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/vsbuildtools.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/vcpkg.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/build-deps.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]

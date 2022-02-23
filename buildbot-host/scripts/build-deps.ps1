@@ -18,28 +18,11 @@ if (-Not (Test-Path "${workdir}\openvpn-gui")) {
   & git.exe clone https://github.com/OpenVPN/openvpn-gui.git "${workdir}\openvpn-gui"
 }
 
-if (-Not (Test-Path "${workdir}\vcpkg")) {
-  & git.exe clone https://github.com/microsoft/vcpkg.git "${workdir}\vcpkg"
-}
-
-# Bootstrap vcpkg
-& "${workdir}\vcpkg\bootstrap-vcpkg.bat"
-
-# Update ports
-cd "${workdir}\vcpkg"
-& git.exe pull
-
-cd $workdir
-
 # Install OpenVPN build dependencies
 $architectures = @('x64','x86','arm64')
 foreach ($arch in $architectures) {
     & "${workdir}\vcpkg\vcpkg.exe" --overlay-ports="${workdir}\openvpn\contrib\vcpkg-ports" --overlay-triplets="${workdir}\openvpn\contrib\vcpkg-triplets" install "lz4:${arch}-windows-ovpn" "lzo:${arch}-windows-ovpn" "openssl3:${arch}-windows-ovpn" "pkcs11-helper:${arch}-windows-ovpn" "tap-windows6:${arch}-windows-ovpn"
 }
-
-# Ensure that OpenVPN build can find the dependencies
-& "${workdir}\vcpkg\vcpkg.exe" integrate install
-
 
 # Ensure that we can convert the man page from rst to html
 & pip.exe --no-cache-dir install docutils
