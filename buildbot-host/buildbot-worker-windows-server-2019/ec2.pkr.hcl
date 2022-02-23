@@ -109,6 +109,10 @@ build {
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/buildbot.ps1 -openvpnvagrant C:\\Users\\buildbot\\openvpn-vagrant -workdir C:\\Users\\buildbot\\buildbot -buildmaster ${var.buildmaster_address} -workername windows-server-2019-latent-ec2 -workerpass ${var.buildbot_windows_server_2019_worker_password} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
+  provisioner "powershell" {
+    # make sure to run user data scripts on first boot from AMI
+    inline = ["C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/InitializeInstance.ps1 -Schedule"]
+  }
 
   sources = [
     "source.amazon-ebs.buildbot-worker-windows-server-2019"
