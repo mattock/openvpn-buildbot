@@ -95,6 +95,8 @@ build {
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/vcpkg.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
   }
+  # Required for some installers
+  provisioner "windows-restart" {}
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/build-deps.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
   }
@@ -105,7 +107,7 @@ build {
     inline = ["C:/Windows/Temp/get-openvpn-vagrant.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:\\Windows\\Temp\\buildbot.ps1 -openvpnvagrant C:\\Users\\buildbot\\openvpn-vagrant -workdir C:\\Users\\buildbot\\buildbot -buildmaster ${var.buildmaster_address} -workername windows-server-2019-latent-ec2 -workerpass ${var.buildbot_windows_server_2019_worker_password} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
+    inline = ["C:/Windows/Temp/buildbot.ps1 -openvpnvagrant C:\\Users\\buildbot\\openvpn-vagrant -workdir C:\\Users\\buildbot\\buildbot -buildmaster ${var.buildmaster_address} -workername windows-server-2019-latent-ec2 -workerpass ${var.buildbot_windows_server_2019_worker_password} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
 
   sources = [
