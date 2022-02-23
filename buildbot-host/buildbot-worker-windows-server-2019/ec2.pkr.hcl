@@ -23,6 +23,11 @@ variable "buildbot_windows_server_2019_ec2_region" {
   type = string
 }
 
+variable "buildbot_windows_server_2019_ec2_subnet" {
+  type = string
+  default = null
+}
+
 variable "buildbot_windows_server_2019_winrm_password" {
   type = string
 }
@@ -41,6 +46,7 @@ source "amazon-ebs" "buildbot-worker-windows-server-2019" {
   force_deregister = true
   instance_type    = "t3a.large"
   region           = var.buildbot_windows_server_2019_ec2_region
+  subnet_id        = var.buildbot_windows_server_2019_ec2_subnet
 
   launch_block_device_mappings {
     device_name = "/dev/sda1"
