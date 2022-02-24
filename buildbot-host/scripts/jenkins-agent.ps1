@@ -8,15 +8,15 @@ param ([string] $workdir,
 
 Write-Host "Setting up Jenkins agent"
 
-Add-MpPreference -ExclusionPath "C:\Jenkins"
-CheckLastExitCode
-
 & choco.exe install -y openjdk8
 CheckLastExitCode
 
 if (-Not (Test-Path $workdir)) {
   New-Item -Type directory $workdir
 }
+
+Add-MpPreference -ExclusionPath $workdir
+CheckLastExitCode
 
 if ($ignore_ssl_errors) {
   add-type @"

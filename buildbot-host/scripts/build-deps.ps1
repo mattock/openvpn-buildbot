@@ -9,6 +9,9 @@ if (-Not (Test-Path $workdir)) {
   CheckLastExitCode
 }
 
+Add-MpPreference -ExclusionPath $workdir
+CheckLastExitCode
+
 if (-Not (Test-Path "${workdir}\openvpn")) {
   & git.exe clone -b master https://github.com/OpenVPN/openvpn.git "${workdir}\openvpn"
   CheckLastExitCode
