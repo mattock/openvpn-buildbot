@@ -1,4 +1,5 @@
 Set-StrictMode -Version Latest
+Set-PSDebug -Trace 2
 function CheckLastExitCode {
     param ([int[]]$SuccessCodes = @(0))
 
