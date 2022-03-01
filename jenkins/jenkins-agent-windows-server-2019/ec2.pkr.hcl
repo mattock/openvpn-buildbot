@@ -40,6 +40,10 @@ variable "buildmaster_address" {
   type = string
 }
 
+variable "jenkinsmaster_address" {
+  type = string
+}
+
 source "amazon-ebs" "windows-server-2019" {
   communicator     = "winrm"
   force_deregister = true
@@ -70,14 +74,13 @@ source "amazon-ebs" "windows-server-2019" {
 
 build {
   source "amazon-ebs.windows-server-2019" {
-    name     = "buildbot-worker-windows-server-2019"
-    ami_name = "buildbot-worker-windows-server-2019-3"
+    name     = "jenkins-agent-windows-server-2019"
+    ami_name = "jenkins-agent-windows-server-2019-1"
   }
 
   provisioner "file" {
-    sources     = [ "../../scripts/",
-                    var.buildbot_authenticode_cert ]
-    destination = "C:/Windows/Temp/"
+    sources      = [ "../../scripts/" ]
+    destination  = "C:/Windows/Temp/"
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/base.ps1"]
@@ -89,36 +92,28 @@ build {
     inline = ["C:/Windows/Temp/cmake.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/msibuilder.ps1 -workdir C:\\Windows\\Temp"]
-  }
-  provisioner "powershell" {
     inline = ["C:/Windows/Temp/python.ps1"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/pip.ps1"]
   }
   provisioner "powershell" {
+    inline = ["C:/Windows/Temp/vcpkg.ps1 -workdir C:\\Jenkins"]
+  }
+  provisioner "powershell" {
     inline = ["C:/Windows/Temp/vsbuildtools.ps1"]
-  }
-  provisioner "powershell" {
-    inline = ["C:/Windows/Temp/vcpkg.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
-  }
-  # Required for some installers
-  provisioner "windows-restart" {}
-  provisioner "powershell" {
-    inline = ["C:/Windows/Temp/build-deps.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/create-buildbot-user.ps1 -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
+  # Required for some installers
+  provisioner "windows-restart" {}
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/get-openvpn-vagrant.ps1"]
-  }
-  provisioner "powershell" {
-    inline = ["C:/Windows/Temp/buildbot.ps1 -openvpnvagrant C:\\Users\\buildbot\\openvpn-vagrant -workdir C:\\Users\\buildbot\\buildbot -buildmaster ${var.buildmaster_address} -workername windows-server-2019-latent-ec2 -workerpass ${var.buildbot_windows_server_2019_worker_password} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
+    inline = ["C:/Windows/Temp/jenkins-agent.ps1 -workdir C:\\Jenkins -jenkins ${var.jenkinsmaster_address} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
   provisioner "powershell" {
     # make sure to run user data scripts on first boot from AMI
     inline = ["C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/InitializeInstance.ps1 -Schedule"]
   }
+
 }
