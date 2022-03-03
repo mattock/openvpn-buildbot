@@ -14,6 +14,7 @@ Write-Host "Setting up buildbot"
 if (-Not (Test-Path $workdir)) {
   New-item -Type directory $workdir
 }
+
 Copy-Item "${openvpnvagrant}\buildbot-host\buildbot.tac" $workdir
 
 Write-Host "Installing vswhere.exe to used by build steps"

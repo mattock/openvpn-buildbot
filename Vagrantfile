@@ -34,29 +34,19 @@ Vagrant.configure("2") do |config|
     box.vm.hostname = "buildbot-worker-windows-server-2019"
     box.vm.network "private_network", ip: "192.168.59.115"
     box.vm.synced_folder ".", "/vagrant"
-    box.vm.provision "shell", path: "buildbot-host/scripts/evaltimer.ps1"
-    box.vm.provision "shell", path: "buildbot-host/scripts/base.ps1"
-    box.vm.provision "shell" do |s|
-      s.path = "buildbot-host/scripts/msibuilder.ps1"
-      s.args = ["-workdir", "C:\\Users\\vagrant\\Downloads"]
-    end
-    box.vm.provision "shell", path: "buildbot-host/scripts/vsbuildtools.ps1"
-    box.vm.provision "shell", path: "buildbot-host/scripts/python.ps1"
-    box.vm.provision "shell", path: "buildbot-host/scripts/pip.ps1"
-    box.vm.provision "shell" do |s|
-      s.path = "buildbot-host/scripts/build-deps.ps1"
-      s.args = ["-workdir", "C:\\users\\vagrant\\buildbot\\windows-server-2019-static-msbuild"]
-    end
-    box.vm.provision "shell" do |s|
-      s.path = "buildbot-host/scripts/uildbot.ps1"
-      s.args = ["-openvpnvagrant", "C:\\vagrant",
-                "-workdir", "C:\\Users\\vagrant\\buildbot",
-                "-buildmaster", "172.30.55.25",
-                "-workername", "windows-server-2019-static",
-                "-workerpass", "vagrant",
-                "-user", "vagrant",
-                "-password", "vagrant"]
-    end
+    box.vm.provision "file", source: "scripts", destination: "C:\\Windows\\Temp\\scripts"
+    box.vm.provision "shell", inline: "C:\\Windows\\Temp\\scripts\\evaltimer.ps1"
+    box.vm.provision "shell", inline: "C:\\Windows\\Temp\\scripts\\base.ps1"
+    box.vm.provision "shell", inline: "C:\\Windows\\Temp\\scripts\\git.ps1"
+    box.vm.provision "shell", inline: "C:\\Windows\\Temp\\scripts\\cmake.ps1"
+    box.vm.provision "shell", inline: "C:\\Windows\\Temp\\scripts\\msibuilder.ps1 -workdir C:\\Users\\vagrant\\Downloads"
+    box.vm.provision "shell", inline: "powershell.exe C:\\Windows\\Temp\\scripts\\python.ps1"
+    box.vm.provision "shell", inline: "powershell.exe C:\\Windows\\Temp\\scripts\\pip.ps1"
+    box.vm.provision "shell", inline: "powershell.exe C:\\Windows\\Temp\\scripts\\vsbuildtools.ps1"
+    box.vm.provision "shell", inline: "C:\\Windows\\Temp\\scripts\\vcpkg.ps1 -workdir C:\\Users\\vagrant\\Downloads"
+    box.vm.provision "shell", inline: "powershell.exe C:\\Windows\\Temp\\scripts\\reboot.ps1"
+    box.vm.provision "shell", inline: "C:\\Windows\\Temp\\scripts\\build-deps.ps1 -workdir C:\\users\\vagrant\\buildbot\\windows-server-2019-static-msbuild"
+    box.vm.provision "shell", inline: "C:\\Windows\\Temp\\scripts\\buildbot.ps1 -openvpnvagrant C:\\vagrant -workdir C:\\Users\\vagrant\\buildbot -buildmaster 172.30.55.25 -workername windows-server-2019-static -workerpass vagrant -user vagrant -password vagrant"
     box.vm.provider "virtualbox" do |vb|
       vb.gui = false
       vb.memory = 3072

@@ -75,47 +75,47 @@ build {
   }
 
   provisioner "file" {
-    sources     = [ "../../scripts/",
+    sources     = [ "../../scripts",
                     var.buildbot_authenticode_cert ]
-    destination = "C:/Windows/Temp/"
+    destination = "C:/Windows/Temp/scripts"
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/base.ps1"]
+    inline = ["C:/Windows/Temp/scripts/base.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/git.ps1"]
+    inline = ["C:/Windows/Temp/scripts/git.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/cmake.ps1"]
+    inline = ["C:/Windows/Temp/scripts/cmake.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/msibuilder.ps1 -workdir C:\\Windows\\Temp"]
+    inline = ["C:/Windows/Temp/scripts/msibuilder.ps1 -workdir C:\\Windows\\Temp"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/python.ps1"]
+    inline = ["C:/Windows/Temp/scripts/python.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/pip.ps1"]
+    inline = ["C:/Windows/Temp/scripts/pip.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/vsbuildtools.ps1"]
+    inline = ["C:/Windows/Temp/scripts/vsbuildtools.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/vcpkg.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
+    inline = ["C:/Windows/Temp/scripts/vcpkg.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
   }
   # Required for some installers
   provisioner "windows-restart" {}
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/build-deps.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
+    inline = ["C:/Windows/Temp/scripts/build-deps.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/create-buildbot-user.ps1 -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
+    inline = ["C:/Windows/Temp/scripts/create-buildbot-user.ps1 -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/get-openvpn-vagrant.ps1"]
+    inline = ["C:/Windows/Temp/scripts/get-openvpn-vagrant.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/buildbot.ps1 -openvpnvagrant C:\\Users\\buildbot\\openvpn-vagrant -workdir C:\\Users\\buildbot\\buildbot -buildmaster ${var.buildmaster_address} -workername windows-server-2019-latent-ec2 -workerpass ${var.buildbot_windows_server_2019_worker_password} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
+    inline = ["C:/Windows/Temp/scripts/buildbot.ps1 -openvpnvagrant C:\\Users\\buildbot\\openvpn-vagrant -workdir C:\\Users\\buildbot\\buildbot -buildmaster ${var.buildmaster_address} -workername windows-server-2019-latent-ec2 -workerpass ${var.buildbot_windows_server_2019_worker_password} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
   provisioner "powershell" {
     # make sure to run user data scripts on first boot from AMI

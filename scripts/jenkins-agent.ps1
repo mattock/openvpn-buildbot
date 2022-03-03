@@ -4,7 +4,7 @@ param ([string] $workdir,
        [string] $password,
        [bool]   $ignore_ssl_errors=$false)
 
-. C:\Windows\Temp\ps_support.ps1
+. C:\Windows\Temp\scripts\ps_support.ps1
 
 Write-Host "Setting up Jenkins agent"
 

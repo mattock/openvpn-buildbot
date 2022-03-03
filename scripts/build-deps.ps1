@@ -1,6 +1,6 @@
 param ([string] $workdir)
 
-. C:\Windows\Temp\ps_support.ps1
+. C:\Windows\Temp\scripts\ps_support.ps1
 
 Write-Host "Setting up openvpn build dependencies with vcpkg"
 
