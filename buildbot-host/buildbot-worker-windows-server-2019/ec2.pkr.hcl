@@ -75,10 +75,15 @@ build {
   }
 
   provisioner "file" {
-    sources     = [ "../../scripts",
-                    var.buildbot_authenticode_cert ]
-    destination = "C:/Windows/Temp/scripts"
+    sources     = ["../../scripts/"]
+    destination = "C:/Windows/Temp/scripts/"
   }
+
+  provisioner "file" {
+    sources     = [ var.buildbot_authenticode_cert ]
+    destination = "C:/Windows/Temp/scripts/"
+  }
+
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/base.ps1"]
   }
