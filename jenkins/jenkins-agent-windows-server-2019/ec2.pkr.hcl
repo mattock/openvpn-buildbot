@@ -82,6 +82,9 @@ build {
     inline = ["C:/Windows/Temp/scripts/pip.ps1"]
   }
   provisioner "powershell" {
+    inline = ["C:/Windows/Temp/scripts/swig.ps1"]
+  }
+  provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/vcpkg.ps1 -workdir C:\\Jenkins"]
   }
   provisioner "powershell" {
