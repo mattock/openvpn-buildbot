@@ -7,14 +7,6 @@ packer {
   }
 }
 
-variable "buildbot_authenticode_cert" {
-  type = string
-}
-
-variable "buildbot_authenticode_password" {
-  type = string
-}
-
 variable "buildbot_windows_server_2019_buildbot_user_password" {
   type = string
 }
@@ -29,14 +21,6 @@ variable "buildbot_windows_server_2019_ec2_subnet" {
 }
 
 variable "buildbot_windows_server_2019_winrm_password" {
-  type = string
-}
-
-variable "buildbot_windows_server_2019_worker_password" {
-  type = string
-}
-
-variable "buildmaster_address" {
   type = string
 }
 
@@ -80,36 +64,36 @@ build {
 
   provisioner "file" {
     sources      = [ "../../scripts/" ]
-    destination  = "C:/Windows/Temp/"
+    destination  = "C:/Windows/Temp/scripts/"
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/base.ps1"]
+    inline = ["C:/Windows/Temp/scripts/base.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/git.ps1"]
+    inline = ["C:/Windows/Temp/scripts/git.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/cmake.ps1"]
+    inline = ["C:/Windows/Temp/scripts/cmake.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/python.ps1"]
+    inline = ["C:/Windows/Temp/scripts/python.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/pip.ps1"]
+    inline = ["C:/Windows/Temp/scripts/pip.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/vcpkg.ps1 -workdir C:\\Jenkins"]
+    inline = ["C:/Windows/Temp/scripts/vcpkg.ps1 -workdir C:\\Jenkins"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/vsbuildtools.ps1"]
+    inline = ["C:/Windows/Temp/scripts/vsbuildtools.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/create-buildbot-user.ps1 -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
+    inline = ["C:/Windows/Temp/scripts/create-buildbot-user.ps1 -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
   # Required for some installers
   provisioner "windows-restart" {}
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/jenkins-agent.ps1 -workdir C:\\Jenkins -jenkins ${var.jenkinsmaster_address} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
+    inline = ["C:/Windows/Temp/scripts/jenkins-agent.ps1 -workdir C:\\Jenkins -jenkins ${var.jenkinsmaster_address} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
   provisioner "powershell" {
     # make sure to run user data scripts on first boot from AMI
