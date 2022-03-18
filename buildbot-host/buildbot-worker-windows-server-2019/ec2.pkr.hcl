@@ -43,7 +43,7 @@ variable "buildmaster_address" {
 source "amazon-ebs" "windows-server-2019" {
   communicator     = "winrm"
   force_deregister = true
-  instance_type    = "t3a.large"
+  instance_type    = "t3a.xlarge"
   region           = var.buildbot_windows_server_2019_ec2_region
   subnet_id        = var.buildbot_windows_server_2019_ec2_subnet
 
