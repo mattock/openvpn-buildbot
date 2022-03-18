@@ -1,5 +1,4 @@
-param ([string] $openvpnvagrant,
-       [string] $workdir,
+param ([string] $workdir,
        [string] $buildmaster,
        [string] $workername,
        [string] $workerpass,
@@ -14,7 +13,7 @@ Write-Host "Setting up buildbot"
 if (-Not (Test-Path $workdir)) {
   New-item -Type directory $workdir
 }
-Copy-Item "${openvpnvagrant}\buildbot-host\buildbot.tac" $workdir
+Copy-Item "C:\Windows\Temp\buildbot.tac" $workdir
 
 Write-Host "Installing vswhere.exe to used by build steps"
 & choco.exe install -y vswhere
