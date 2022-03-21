@@ -7,14 +7,6 @@ packer {
   }
 }
 
-variable "buildbot_authenticode_cert" {
-  type = string
-}
-
-variable "buildbot_authenticode_password" {
-  type = string
-}
-
 variable "buildbot_windows_server_2019_buildbot_user_password" {
   type = string
 }
@@ -32,18 +24,14 @@ variable "buildbot_windows_server_2019_winrm_password" {
   type = string
 }
 
-variable "buildbot_windows_server_2019_worker_password" {
-  type = string
-}
-
-variable "buildmaster_address" {
+variable "jenkinsmaster_address" {
   type = string
 }
 
 source "amazon-ebs" "windows-server-2019" {
   communicator     = "winrm"
   force_deregister = true
-  instance_type    = "t3a.xlarge"
+  instance_type    = "t3a.large"
   region           = var.buildbot_windows_server_2019_ec2_region
   subnet_id        = var.buildbot_windows_server_2019_ec2_subnet
 
@@ -70,20 +58,14 @@ source "amazon-ebs" "windows-server-2019" {
 
 build {
   source "amazon-ebs.windows-server-2019" {
-    name     = "buildbot-worker-windows-server-2019"
-    ami_name = "buildbot-worker-windows-server-2019-4"
+    name     = "jenkins-agent-windows-server-2019"
+    ami_name = "jenkins-agent-windows-server-2019-1"
   }
 
   provisioner "file" {
-    sources     = ["../../scripts/"]
-    destination = "C:/Windows/Temp/scripts/"
+    sources      = [ "../../scripts/" ]
+    destination  = "C:/Windows/Temp/scripts/"
   }
-
-  provisioner "file" {
-    sources     = [ var.buildbot_authenticode_cert ]
-    destination = "C:/Windows/Temp/scripts/"
-  }
-
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/base.ps1"]
   }
@@ -94,37 +76,31 @@ build {
     inline = ["C:/Windows/Temp/scripts/cmake.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/scripts/msibuilder.ps1"]
-  }
-  provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/python.ps1"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/pip.ps1"]
   }
   provisioner "powershell" {
+    inline = ["C:/Windows/Temp/scripts/swig.ps1"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/scripts/vcpkg.ps1 -workdir C:\\Jenkins"]
+  }
+  provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/vsbuildtools.ps1"]
-  }
-  provisioner "powershell" {
-    inline = ["C:/Windows/Temp/scripts/vcpkg.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild"]
-  }
-  # Required for some installers
-  provisioner "windows-restart" {}
-  provisioner "powershell" {
-    inline = ["C:/Windows/Temp/scripts/build-deps.ps1 -workdir C:\\Users\\buildbot\\buildbot\\windows-server-2019-latent-ec2-msbuild -openvpn_ref master -openvpn_build_ref master openvpn_gui_ref master -openssl openssl3"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/create-buildbot-user.ps1 -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
-  provisioner "file" {
-    sources     = ["../buildbot.tac"]
-    destination = "C:/Windows/Temp/"
+  # Required for some installers
+  provisioner "windows-restart" {}
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/scripts/jenkins-agent.ps1 -workdir C:\\Jenkins -jenkins ${var.jenkinsmaster_address} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/scripts/buildbot.ps1 -workdir C:\\Users\\buildbot\\buildbot -buildmaster ${var.buildmaster_address} -workername windows-server-2019-latent-ec2 -workerpass ${var.buildbot_windows_server_2019_worker_password} -user buildbot -password ${var.buildbot_windows_server_2019_buildbot_user_password}"]
-  }
-  provisioner "powershell" {
-   # make sure to run user data scripts on first boot from AMI
+    # make sure to run user data scripts on first boot from AMI
     inline = ["C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/InitializeInstance.ps1 -Schedule"]
   }
+
 }

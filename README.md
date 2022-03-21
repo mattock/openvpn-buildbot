@@ -20,27 +20,6 @@ This system has been tested on:
 The whole system is configured to use 8GB of memory. However, it could potentially run in less, because
 all the buildbot workers that do the heavy lifting are latent Docker and EC2 workers. 
 
-# Supported build types
-
-## openvpn
-
-* Basic Unix compile tests using arbitrary, configurable configure options
-* Unix connectivity tests using t_client.sh (see OpenVPN Git repository)
-* Native Windows builds using MSVC to (cross-)compile for x86, x64 and arm64 plus MSI packaging and signing
-* Debian/Ubuntu packaging (partially implemented)
-
-## openvpn3
-
-* Compile tests against OpenSSL and stable release of ASIO
-
-## openvpn3-linux
-
-* Compile tests with standard settings
-
-## ovpn-dco
-
-* Compile tests against the operating system's default kernel
-
 # Setup in Vagrant
 
 If you use Vagrant with Virtualbox you need to install Virtualbox Guest
@@ -57,7 +36,51 @@ After that you should be able to just do
     $ vagrant up buildbot-host
 
 and once that has finished you can adapt buildbot configuration to your needs,
-rebuild the buildmaster container and start using the system.
+rebuild the buildmaster container and start using the system. At that point you
+will a fully functional, dockerized buildbot environment inside the
+buildbot-host VM.
+
+You can use two providers with the buildbot VMs: *virtualbox* and *hyperv*. Vagrant should be able to select
+the correct provider automatically. If you have both VirtualBox and Hyper-V enabled you need to explicitly
+define the provider *and* run "vagrant up" as an Administrator. For example:
+
+    $ vagrant up --provider hyperv buildbot-host
+
+After you've provisioned buildbot-host you need to launch the buildmaster container:
+
+    $ vagrant ssh buildbot-host
+    $ cd /vagrant/buildbot-host/buildmaster
+    $ ./launch.sh v2.0.0
+
+When you restart the VM buildmaster container will come up automatically.
+
+If you're using Virtualbox you can connect to the buildmaster using this address:
+
+* http://192.168.48.114:8010
+
+In case of Hyper-V you need to get the local IP of buildbot-host from output of "vagrant up".
+For example:
+
+* http://172.30.55.25:8010
+
+This is because Hyper-V ignores Vagrant's networking settings completely.
+
+To do Windows testing also spin up the Windows worker:
+
+    $ vagrant up buildbot-worker-windows-server-2019
+
+If you're doing this on Hyper-V you need to modify the buildmaster IP in Vagrantfile to match that of
+the Buildmaster. In Hyper-V you will also need to pass your current Windows user's credentials to Vagrant
+for it to be able to mount the SMB synced folder. You can get a list of valid usernames with Powershell:
+
+    PS> Get-LocalUser
+
+In Virtualbox file sharing between host and guest is handled by with the VirtualBox filesystem. In
+either case your openvpn-vagrant directory will get mounted to /vagrant on buildbot-host, and C:\Vagrant
+on Windows hosts.
+
+**NOTE:** you can spin up buildbot-host outside of Vagrant. For more details about that and other topics
+refer to [buildbot-host/README.md](buildbot-host/README.md).
 
 # Setup outside Vagrant
 
@@ -79,6 +102,39 @@ Then provision the environment:
 
 Note that provisioning is only tested on Ubuntu 20.04 server and is unlikely to
 work on any other Ubuntu or Debian version without modifications.
+
+# Logging into the Windows VMs from Linux
+
+If you're running Vagrant on Linux you're almost certainly using
+[FreeRDP](https://www.freerdp.com/). That means you have to accept the Windows
+VM's host key before attempting to "vagrant rdp" into it:
+
+    $ xfreerdp /v:127.0.0.1:3389
+
+Once the host key is in FreeRDP's cache you can connect to the instance. For example:
+
+    $ vagrant rdp buildbot-worker-windows-server-2019
+
+# Supported build types
+
+## openvpn
+
+* Basic Unix compile tests using arbitrary, configurable configure options
+* Unix connectivity tests using t_client.sh (see OpenVPN Git repository)
+* Native Windows builds using MSVC to (cross-)compile for x86, x64 and arm64 plus MSI packaging and signing
+* Debian/Ubuntu packaging (partially implemented)
+
+## openvpn3
+
+* Compile tests against OpenSSL and stable release of ASIO
+
+## openvpn3-linux
+
+* Compile tests with standard settings
+
+## ovpn-dco
+
+* Compile tests against the operating system's default kernel
 
 ## Relevant files and directories under buildbot-host:
 
