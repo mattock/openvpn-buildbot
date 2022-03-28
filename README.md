@@ -159,6 +159,7 @@ may also use:
 Here's a list of relevant directories:
 
 * *buildmaster*: files, directories and configuration related to the buildmaster
+    * *authenticode.pfx*: your Windows code signing key (ignored by Git, must be copied to correct place manually)
     * *master-default.ini*: global/buildmaster settings (Git repo URLs etc). Does not get loaded if *master.ini* (below) is present.
     * *master.ini*: local, unversioned config file with which you can override *master-default.ini*.
     * *worker-default.ini*: buildbot worker settings. The \[DEFAULT\] section sets the defaults, which can be overridden on a per-worker basis. Does not get loaded if *worker.ini* (below) is present.
