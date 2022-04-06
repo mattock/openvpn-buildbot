@@ -21,6 +21,7 @@ git \
 glib2 \
 gnutls \
 jsoncpp \
+libcap \
 libcap-ng \
 libtool \
 linux-headers \

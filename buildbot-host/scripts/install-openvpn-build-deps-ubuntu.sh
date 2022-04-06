@@ -29,6 +29,7 @@ groff-base \
 intltool-debian \
 iproute2 \
 libasio-dev \
+libcap-dev \
 libcap-ng-dev \
 libcmocka-dev \
 libcmocka0 \

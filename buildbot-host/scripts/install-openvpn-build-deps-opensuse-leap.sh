@@ -18,6 +18,7 @@ gnutls-devel \
 gzip \
 jsoncpp-devel \
 kernel-devel \
+libcap-devel \
 libcap-ng-devel \
 liblz4-devel \
 libxml2-devel \

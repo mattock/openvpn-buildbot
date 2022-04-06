@@ -22,6 +22,7 @@ git \
 glib2-devel \
 gnutls-devel \
 jsoncpp-devel \
+libcap-devel \
 libcap-ng-devel \
 libtool \
 libuuid-devel \
