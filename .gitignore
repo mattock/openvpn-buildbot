@@ -1,4 +1,5 @@
 .provision.sh-ran
+buildbot-host/provision.env
 master.ini
 worker.ini
 *.swp
