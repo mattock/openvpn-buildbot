@@ -5,3 +5,4 @@ worker.ini
 *.swp
 .vagrant
 *.pfx
+build.log
