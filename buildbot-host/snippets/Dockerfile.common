@@ -12,7 +12,8 @@ RUN set -ex; \
     rm -f ${DEPS_SH}
 
 # Install buildbot
-COPY scripts/install-buildbot.sh /buildbot/
+ARG MY_NAME
+COPY scripts/install-buildbot.sh t_client/*.crt t_client/*.rc ${MY_NAME}/t_client.* /buildbot/
 RUN set -ex; \
     /buildbot/install-buildbot.sh; \
     rm -f /buildbot/install-buildbot.sh
