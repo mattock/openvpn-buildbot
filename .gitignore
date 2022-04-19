@@ -6,3 +6,5 @@ worker.ini
 .vagrant
 *.pfx
 build.log
+t_client.crt
+t_client.key
