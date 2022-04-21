@@ -6,6 +6,7 @@ set -ex
 
 # pkcs11-helper-dev is only available in the EPEL repository
 yum -y install epel-release
+yum install -y scl-utils centos-release-scl-rh
 
 yum -y install \
 autoconf \
@@ -13,6 +14,7 @@ autoconf-archive \
 automake \
 bzip2 \
 cmake3 \
+devtoolset-10 \
 gcc \
 gcc-c++ \
 git \
@@ -46,6 +48,9 @@ selinux-policy-devel \
 tinyxml2 \
 tinyxml2-devel \
 zlib-devel
+
+echo "source /opt/rh/devtoolset-10/enable" >> /etc/profile
+echo "source /opt/rh/devtoolset-10/enable" >> /etc/bashrc
 
 # This is required for CentoOS 7 where "cmake" is missing, but "cmake3" is
 # present.
