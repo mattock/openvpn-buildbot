@@ -31,6 +31,10 @@ docker network create --driver bridge buildbot-net
 # Create volume for storing buildmaster's sqlite database and passwords
 docker volume create buildmaster
 
+# Create a directory for local Git repositories shared from the Docker host to
+# the buildmaster container
+mkdir -p /var/lib/repos
+
 # Add secrets
 mkdir -p $VOLUME_DIR/secrets
 chmod 700 $VOLUME_DIR/secrets
