@@ -9,6 +9,8 @@ rm -f $B/twistd.pid
 
 #BUILDBOT_CONFIG_DIR=$B
 
+. /buildbot_venv/bin/activate
+
 # wait for db to start by trying to upgrade the master
 until buildbot upgrade-master $B
 do
