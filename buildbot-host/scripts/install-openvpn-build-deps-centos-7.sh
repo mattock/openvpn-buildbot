@@ -15,11 +15,13 @@ automake \
 bzip2 \
 cmake3 \
 devtoolset-10 \
+fping \
 gcc \
 gcc-c++ \
 git \
 glib2-devel \
 gnutls-devel \
+iproute \
 jsoncpp-devel \
 libcap-devel \
 libcap-ng-devel \

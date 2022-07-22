@@ -16,6 +16,7 @@ bzip2 \
 cmake \
 curl \
 dbus-python \
+fping \
 gcc \
 git \
 glib2 \
@@ -40,7 +41,10 @@ python-pip \
 python-setuptools \
 python-wheel \
 tinyxml2 \
+which \
 zlib
 
 # Hack to ensure that kernel headers can be found from a predictable place
 ln -s /lib/modules/$(ls /lib/modules|head -n 1)/build /buildbot/kernel-headers
+# arch doesn't have fping6 symlink, t_client.sh can't deal
+ln -s /usr/sbin/fping /usr/sbin/fping6
