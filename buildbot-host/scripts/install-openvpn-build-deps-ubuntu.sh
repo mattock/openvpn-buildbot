@@ -42,6 +42,7 @@ libjsoncpp-dev \
 liblz4-dev \
 liblzo2-dev \
 libmbedtls-dev \
+libnl-genl-3-dev \
 libpam-dev \
 libp11-kit-dev \
 libpkcs11-helper-dev \
