@@ -42,6 +42,7 @@ python-setuptools \
 python-wheel \
 tinyxml2 \
 which \
+xxhash \
 zlib
 
 # Hack to ensure that kernel headers can be found from a predictable place

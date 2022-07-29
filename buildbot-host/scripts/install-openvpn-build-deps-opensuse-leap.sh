@@ -45,7 +45,8 @@ python3-pip \
 python3-pyOpenSSL \
 python3-setuptools \
 python3-wheel \
-tinyxml2-devel
+tinyxml2-devel \
+xxhash-devel
 
 # Hack to ensure that kernel headers can be found from a predictable place
 # Right now kernel headers are not usable with ovpn-dco, so this is here mostly
