@@ -50,6 +50,7 @@ libsystemd-dev \
 libtool \
 libtinyxml2-dev \
 libxml2-utils \
+libxxhash-dev \
 make \
 net-tools \
 pkg-config \

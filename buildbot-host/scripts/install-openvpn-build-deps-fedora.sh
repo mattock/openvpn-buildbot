@@ -45,6 +45,7 @@ python3-wheel \
 selinux-policy-devel \
 tinyxml2-devel \
 which \
+xxhash-devel \
 zlib-devel
 
 # Hack to ensure that kernel headers can be found from a predictable place
