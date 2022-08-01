@@ -11,7 +11,7 @@ top_srcdir="${top_srcdir:-..}"
 CA_CERT="/buildbot/ca.crt"
 CLIENT_KEY="/buildbot/t_client.key"
 CLIENT_CERT="/buildbot/t_client.crt"
-#FPING_EXTRA_ARGS="-t 1000"
+FPING_EXTRA_ARGS="-t 1000"
 
 # Load EXPECT_IFCONFIG* parameters from cache
 if [ -r "/home/buildbot/t_client_ips.rc" ]; then

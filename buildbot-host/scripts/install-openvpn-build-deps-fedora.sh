@@ -9,11 +9,14 @@ autoconf-archive \
 automake \
 bzip2 \
 cmake \
+fping \
 gcc \
 gcc-c++ \
 git \
 glib2-devel \
 gnutls-devel \
+hostname \
+iproute \
 jsoncpp-devel \
 libcap-devel \
 libcap-ng-devel \
@@ -41,7 +44,10 @@ python3-setuptools \
 python3-wheel \
 selinux-policy-devel \
 tinyxml2-devel \
+which \
 zlib-devel
 
 # Hack to ensure that kernel headers can be found from a predictable place
 ln -s /usr/src/kernels/$(ls /usr/src/kernels|head -n 1) /buildbot/kernel-headers
+# fedora doesn't have fping6 symlink, t_client.sh can't deal
+ln -s /usr/sbin/fping /usr/sbin/fping6

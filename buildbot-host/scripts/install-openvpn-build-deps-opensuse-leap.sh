@@ -10,12 +10,15 @@ automake \
 bzip2 \
 cmake \
 curl \
+fping \
 gcc \
 gcc-c++ \
 git \
 glib2-devel \
 gnutls-devel \
 gzip \
+hostname \
+iproute \
 jsoncpp-devel \
 kernel-devel \
 libcap-devel \
@@ -48,3 +51,5 @@ tinyxml2-devel
 # Right now kernel headers are not usable with ovpn-dco, so this is here mostly
 # for documentation purposes.
 ln -s /usr/src/linux /buildbot/kernel-headers
+# openSUSE doesn't have fping6 symlink, t_client.sh can't deal
+ln -s /usr/sbin/fping /usr/sbin/fping6
