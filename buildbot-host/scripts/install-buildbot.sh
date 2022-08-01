@@ -4,7 +4,7 @@
 #
 set -ex
 
-BUILDBOT_VERSION=3.1.0
+BUILDBOT_VERSION=3.5.0
 
 pip3 install --upgrade pip && \
 pip --no-cache-dir install twisted[tls] && \
