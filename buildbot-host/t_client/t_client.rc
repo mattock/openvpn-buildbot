@@ -2,20 +2,31 @@
 # this is sourced from t_client.sh and defines which openvpn client tests
 # to run
 #
-# (sample config, copy to t_client.rc and adapt to your environment)
-#
 #
 # define these - if empty, no tests will run
 #
 top_srcdir="${top_srcdir:-..}"
-CA_CERT="/buildbot/ca.crt"
-CLIENT_KEY="/buildbot/t_client.key"
-CLIENT_CERT="/buildbot/t_client.crt"
-FPING_EXTRA_ARGS="-t 1000"
+if [ -z "$KEYBASE" ] ; then
+    KEYBASE="/buildbot"
+fi
+
+CA_CERT="$KEYBASE/ca.crt"
+CLIENT_KEY="$KEYBASE/t_client.key"
+CLIENT_CERT="$KEYBASE/t_client.crt"
+
+# not required in docker
+#RUN_SUDO=sudo
+
+#
+# default time for OpenVPN startup is 10 seconds, increase for faraway server
+SETUP_TIME_WAIT=20
+
+# override test ("make it fast!")
+FPING_EXTRA_ARGS="-C 5 -p 500"
 
 # Load EXPECT_IFCONFIG* parameters from cache
-if [ -r "/home/buildbot/t_client_ips.rc" ]; then
-    . "/home/buildbot/t_client_ips.rc"
+if [ -r "$HOME/t_client_ips.rc" ]; then
+    . "$HOME/t_client_ips.rc"
 else
     echo "NOTICE: missing t_client_ips.rc will be auto-generated"
 fi
@@ -23,24 +34,44 @@ fi
 #
 # remote host (used as macro below)
 #
-REMOTE=phillip.secure-computing.net
+REMOTE=conn-test-server.openvpn.org
+REMOTE4=199.102.77.82
+#REMOTE=gentoo.ov.greenie.net
 #
 # tests to run (list suffixes for config stanzas below)
 #
-TEST_RUN_LIST="1 2"
+TEST_RUN_LIST="1 2 2a 2f 3 4 4b 5 6"
+#TEST_RUN_LIST="1 1a 1b 1c 1d 1e 2 2a 2b 2c 2d 2e 2f 3 4 4a 4b 5 6 8 8a 9 9a 9b 9x 11 11a"
+#TEST_RUN_LIST="1 1a 2 3"
+#TEST_RUN_LIST="1a"
+#TEST_RUN_LIST="1b 1c 1d"
+#TEST_RUN_LIST="1d 1e 2d 2e"	# socks tcp4/tcp6/udp4/udp6
+#TEST_RUN_LIST="2e"	# socks udp6 - does not work - openvpn!
+#TEST_RUN_LIST="1d"
+#TEST_RUN_LIST="1e"		# "used to be: needs 'openssh -D 2222'"
+#TEST_RUN_LIST="2 2a"
+#TEST_RUN_LIST="2d"
+#TEST_RUN_LIST="2d 2e 4 4b"	# normal / v6-only
+#TEST_RUN_LIST="2e"
+#TEST_RUN_LIST="4 4a 4b"	# TAP tests
+#TEST_RUN_LIST="6"		# --fragment
+#TEST_RUN_LIST="8"
+#TEST_RUN_LIST="9"		# --inetd
+#TEST_RUN_LIST="2 2a 2c"		# --ncp-disable, --multihome
+#TEST_RUN_LIST="8 8a 9"		# p2p, --inetd (-> gentoo.ov)
 
-#
-# use "sudo" (etc) to give openvpn the necessary privileges
-# if this is not active, "make check" must be run as root
-#
-#RUN_SUDO=sudo
+if [ -n "$TEST_RUN_OVERRIDE" ] ; then
+    echo "overriding test list: $TEST_RUN_OVERRIDE"
+    TEST_RUN_LIST="$TEST_RUN_OVERRIDE"
+fi
 
 #
 # base confic that is the same for all the p2mp test runs
 #
 OPENVPN_BASE_P2MP="--client --tls-cert-profile insecure --ca $CA_CERT \
 	--cert $CLIENT_CERT --key $CLIENT_KEY \
-	--remote-cert-tls server --nobind --comp-lzo --verb 3"
+	--remote-cert-tls server --comp-lzo --verb 3 $OPENVPN_EXTRA_CF"
+#	--remote-cert-tls server --nobind --comp-lzo --verb 3"
 
 # base config for p2p tests
 #
@@ -50,53 +81,263 @@ OPENVPN_BASE_P2P="..."
 #
 # now define the individual tests - all variables suffixed with _1, _2 etc
 # will be used in test run "1", "2", etc.
+# 
+# if something is not defined here, the "generic" variable without 
+# suffix will be used
 #
-# if something is not defined here, the corresponding test is not run
+# Test 1: TCP / p2mp tun
 #
-# possible test options:
+RUN_TITLE_1="tcp / p2pm / top net30"
+OPENVPN_CONF_1="$OPENVPN_BASE_P2MP --dev tun --proto tcp4 --remote $REMOTE --port 51194"
+PING4_HOSTS_1="10.194.1.1 10.194.0.1"
+PING6_HOSTS_1="fd00:abcd:194:1::1 fd00:abcd:194:0::1"
+
 #
-# RUN_TITLE_x="what is being tested on here" (purely informational)
-# OPENVPN_CONF_x = "how to call ./openvpn" [mandatory]
-# EXPECT_IFCONFIG4_x = "this IPv4 address needs to show up in ifconfig"
-# EXPECT_IFCONFIG6_x = "this IPv6 address needs to show up in ifconfig"
-# PING4_HOSTS_x = "these hosts musts ping when openvpn is up (IPv4 fping)"
-# PING6_HOSTS_x = "these hosts musts ping when openvpn is up (IPv6 fping6)"
+# Test 1a: TCP / IPv6 / p2mp tun
+# 
+# with --server-poll-timeout, just to ensure it is still allowed in TLS mode
+
+RUN_TITLE_1a="tcp*6* / p2pm / top net30"
+OPENVPN_CONF_1a="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --server-poll-timeout 10" # --ifconfig-noexec
+PING4_HOSTS_1a="$PING4_HOSTS_1"
+PING6_HOSTS_1a="$PING6_HOSTS_1"
+
 #
-# Test 1: UDP / p2mp tun
+# Test 1b: TCP p2mp tun, IPv4 HTTP proxy
+#
+
+RUN_TITLE_1b="tcp4 / http proxy / p2pm / top net30"
+OPENVPN_CONF_1b="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --http-proxy wwwcache.space.net 3128"
+PING4_HOSTS_1b="$PING4_HOSTS_1"
+PING6_HOSTS_1b="$PING6_HOSTS_1"
+
+#
+# Test 1c: TCP p2mp tun, IPv6 HTTP proxy
+#
+
+RUN_TITLE_1c="tcp6 / http proxy / p2pm / top net30"
+OPENVPN_CONF_1c="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --http-proxy 2001:608:2:81::15 3128"
+PING4_HOSTS_1c="$PING4_HOSTS_1"
+PING6_HOSTS_1c="$PING6_HOSTS_1"
+
+#
+# Test 1d: TCP p2mp tun, IPv4 SOCKS proxy
+#
+
+RUN_TITLE_1d="tcp4 / socks proxy / p2pm / top net30"
+OPENVPN_CONF_1d="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --socks-proxy socks.ov.greenie.net 1080"
+PING4_HOSTS_1d="$PING4_HOSTS_1"
+PING6_HOSTS_1d="$PING6_HOSTS_1"
+
+#
+# Test 1e: TCP p2mp tun, IPv6 SOCKS proxy (localhost, ssh -D 2222)
+#
+
+#RUN_TITLE_1e="tcp6 / socks proxy / p2pm / top net30 [needs ssh -D 2222]"
+RUN_TITLE_1e="tcp6 / socks proxy / p2pm / top net30"
+#OPENVPN_CONF_1e="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --socks-proxy ::1 2222"
+OPENVPN_CONF_1e="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --socks-proxy socks.ov.greenie.net 1080"
+PING4_HOSTS_1e="$PING4_HOSTS_1"
+PING6_HOSTS_1e="$PING6_HOSTS_1"
+
+# Test 1x: TCP / p2mp tun / data-cipher none
+#  [fails 3000 byte IPv4 ping, with "TCP/UDP packet too large on write to"]
+#
+RUN_TITLE_1x="tcp / p2pm / top net30 / --data-cipher none"
+OPENVPN_CONF_1x="$OPENVPN_BASE_P2MP --dev tun --proto tcp --remote gentoo.ov.greenie.net --port 51194 --data-ciphers none"
+PING4_HOSTS_1x="10.204.1.1 10.204.0.1"
+PING6_HOSTS_1x="fd00:abcd:204:1::1 fd00:abcd:204:0::1"
+
+
+#
+# Test 2: UDP / p2mp tun
 #   specify IPv4+IPv6 addresses expected from server and ping targets
 #
-RUN_TITLE_1="testing tun/udp/ipv4+ipv6"
-OPENVPN_CONF_1="$OPENVPN_BASE_P2MP --dev tun --proto udp --remote $REMOTE --port 51194"
-PING4_HOSTS_1="10.194.0.1 10.194.2.1"
-PING6_HOSTS_1="fd00:abcd:194:0::1 fd00:abcd:194:2::1"
+RUN_TITLE_2="udp / p2pm / top net30"
+OPENVPN_CONF_2="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51194"
+PING4_HOSTS_2="10.194.2.1 10.194.0.1"
+PING6_HOSTS_2="fd00:abcd:194:2::1 fd00:abcd:194:0::1"
 
-# Test 2: TCP / p2mp tun
+# Test 2a: UDP / p2mp tun, no v4-routes, no NCP
+# (regression in svn-merger, crash if "IPv4 struct route_list * rl" is NULL)
+# same server used as for "test 2", but different client option
 #
-RUN_TITLE_2="testing tun/tcp/ipv4+ipv6"
-OPENVPN_CONF_2="$OPENVPN_BASE_P2MP --dev tun --proto tcp --remote $REMOTE --port 51194"
-PING4_HOSTS_2="10.194.0.1 10.194.1.1"
-PING6_HOSTS_2="fd00:abcd:194:0::1 fd00:abcd:194:1::1"
+# + mtu-disc yes to test for "nobind" socket errors
+# + --ncp-disable
+# gert, 2.8.21, remove --ncp-disable (no longer in master)
+# gert, 20.9.21, add --data-ciphers BF-CBC to force BF-CBC (MTU/frame)
+
+#RUN_TITLE_2a="udp / p2pm / v6-only / --multihome / --ncp-disable"
+RUN_TITLE_2a="udp / p2pm / v6-only / --multihome"
+OPENVPN_CONF_2a="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51194 --route-nopull --route-ipv6 fd00:abcd:194::/48 --multihome --cipher BF-CBC --data-ciphers BF-CBC --providers legacy default"
+# geht nicht auf FreeBSD
+#if [ `uname -o` = "GNU/Linux" ] ; then
+#    OPENVPN_CONF_2a="$OPENVPN_CONF_2a --mtu-disc yes"
+#fi
+PING6_HOSTS_2a="$PING6_HOSTS_2"
+
+# Test 2b: UDP*6* / p2mp tun
+#
+RUN_TITLE_2b="udp *6* / p2pm / top net30"
+OPENVPN_CONF_2b="$OPENVPN_BASE_P2MP --dev tun --proto udp6 --remote $REMOTE --port 51194"
+PING4_HOSTS_2b="$PING4_HOSTS_2"
+PING6_HOSTS_2b="$PING6_HOSTS_2"
+
+# Test 2c: UDP*6* / p2mp tun / --multihome
+#
+RUN_TITLE_2c="udp *6* / p2pm / top net30"
+OPENVPN_CONF_2c="$OPENVPN_BASE_P2MP --dev tun --proto udp6 --remote $REMOTE --port 51194 --multihome"
+PING4_HOSTS_2c="$PING4_HOSTS_2"
+PING6_HOSTS_2c="$PING6_HOSTS_2"
 
 #
-# run command after openvpn initialization is done - here: delay 5 seconds
-POSTINIT_CMD_2="sleep 5"
+# Test 2d: UDP p2mp tun, IPv4 SOCKS proxy
+#
 
-# Test 3: UDP / p2p tun
-# ...
+RUN_TITLE_2d="UDP4 / socks proxy [on TCP!] / p2pm / top net30"
+OPENVPN_CONF_2d="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51194 --socks-proxy socks.ov.greenie.net 1080"
+PING4_HOSTS_2d="$PING4_HOSTS_2"
+PING6_HOSTS_2d="$PING6_HOSTS_2"
 
-# Test 4: TCP / p2p tun
-# ...
+#
+# Test 2e: UDP p2mp tun, IPv6 SOCKS proxy
+#
 
-# Test 5: UDP / p2mp tap
-# ...
+RUN_TITLE_2e="UDP6 / socks proxy [on TCP!] / p2pm / top net30"
+OPENVPN_CONF_2e="$OPENVPN_BASE_P2MP --dev tun --proto udp6 --remote $REMOTE --port 51194 --socks-proxy socks.ov.greenie.net 1080"
+PING4_HOSTS_2e="$PING4_HOSTS_2"
+PING6_HOSTS_2e="$PING6_HOSTS_2"
 
-# Test 6: TCP / p2mp tun
-# ...
+#
+# Test 2f: UDP p2mp tun, IPv6-only (--pull-filter)
+#
 
-# Test 7: UDP / p2p tap
-# ...
+RUN_TITLE_2f="UDP / p2pm / top net30 / pull-filter -> ipv6-only"
+OPENVPN_CONF_2f="$OPENVPN_BASE_P2MP --dev tun --proto udp --remote $REMOTE --port 51194 --pull-filter accept ifconfig- --pull-filter ignore ifconfig"
+PING4_HOSTS_2f=
+PING6_HOSTS_2f="$PING6_HOSTS_2"
 
-# Test 8: TCP / p2p tap
-# ...
 
-# Test 9: whatever you want to test... :-)
+# Test 3: UDP / p2mp tun, topology subnet
+#
+RUN_TITLE_3="udp / p2pm / top subnet"
+OPENVPN_CONF_3="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51195"
+PING4_HOSTS_3="10.194.3.1 10.194.0.1"
+PING6_HOSTS_3="fd00:abcd:194:3::1 fd00:abcd:194:0::1"
+
+# Test 4: UDP / p2mp tap
+#
+RUN_TITLE_4="udp(4) / p2pm / tap"
+OPENVPN_CONF_4="$OPENVPN_BASE_P2MP --dev tap --proto udp4 --remote $REMOTE --port 51196 --route-ipv6 fd00:abcd:195::/48 fd00:abcd:194:4::ffff"
+PING4_HOSTS_4="10.194.4.1 10.194.0.1"
+PING6_HOSTS_4="fd00:abcd:194:4::1 fd00:abcd:194:0::1"
+
+# Test 4a: UDP / p2mp tap3 / topo subnet
+# 
+RUN_TITLE_4a="udp(6) / p2pm / tap3 / topo subnet"
+OPENVPN_CONF_4a="$OPENVPN_BASE_P2MP --dev tap3 --proto udp6 --remote $REMOTE --port 51196 --topology subnet"
+PING4_HOSTS_4a="$PING4_HOSTS_4"
+PING6_HOSTS_4a="$PING6_HOSTS_4"
+
+# Test 4b: UDP / p2mp tap / ipv6-only / MAC-Addr
+# 
+RUN_TITLE_4b="udp / p2pm / tap / ipv6-only (pull-filter) / MAC-Addr"
+OPENVPN_CONF_4b="$OPENVPN_BASE_P2MP --dev tap --proto udp --remote $REMOTE --port 51196 --pull-filter accept ifconfig- --pull-filter ignore ifconfig --lladdr 00:aa:bb:c0:ff:ee"
+PING4_HOSTS_4b=
+PING6_HOSTS_4b="$PING6_HOSTS_4"
+POSTINIT_CMD_4b="sleep 2"			# give DAD time
+
+
+# Test 5: UDP / p2mp tun, top net30, ipv6 /112
+RUN_TITLE_5="udp / p2pm / top net30 / ipv6 112"
+OPENVPN_CONF_5="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51197"
+PING4_HOSTS_5="10.194.5.1 10.194.0.1"
+PING6_HOSTS_5="fd00:abcd:194:5::1 fd00:abcd:194:0::1"
+
+# Test 6: UDP / p2mp tun, top subnet, --fragment 500
+RUN_TITLE_6="udp / p2pm / top subnet / --fragment 500"
+OPENVPN_CONF_6="$OPENVPN_BASE_P2MP --dev tun --proto udp --remote $REMOTE --port 51198 --fragment 500"
+PING4_HOSTS_6="10.194.6.1 10.194.0.1"
+PING6_HOSTS_6="fd00:abcd:194:6::1 fd00:abcd:194:0::1"
+
+# Test ...: UDP / p2mp tap
+#
+
+# Test ...: TCP / p2mp tun
+#
+
+# Test ...: UDP / p2p tap
+#
+
+# Test ...: TCP / p2p tap
+#
+#
+# Test 8: UDP / p2p tun
+RUN_TITLE_8="p2p tun / udp4  ** COMPRESSION / FIXME: fragments BSD -> LINUX **"
+OPENVPN_CONF_8="--dev tun --proto udp4 --remote gentoo.ov.greenie.net 51204 --nobind --secret $KEYBASE/p2p-gentoo.key --ifconfig 10.204.8.2 10.204.8.1 --comp-lzo --tun-ipv6 --ifconfig-ipv6 fd00:abcd:204:8::2/64 fd00:abcd:204:8::1 --route 10.204.0.0 255.255.0.0 --route-ipv6 fd00:abcd:204::/48 --verb 3 --up /rhome/gert/src/openvpn-maint/ping8.sh --script-security 2"
+PING4_HOSTS_8="10.204.8.1 10.204.0.1"
+PING6_HOSTS_8="fd00:abcd:204:8::1 fd00:abcd:204:0::1"
+
+# Test 8a, IPv6
+RUN_TITLE_8a="p2p tun / udp6"
+OPENVPN_CONF_8a="--dev tun --proto udp6 --remote gentoo.ov.greenie.net 51204 --nobind --secret $KEYBASE/p2p-gentoo.key --ifconfig 10.204.8.2 10.204.8.1 --comp-lzo --tun-ipv6 --ifconfig-ipv6 fd00:abcd:204:8::2/64 fd00:abcd:204:8::1 --route 10.204.0.0 255.255.0.0 --route-ipv6 fd00:abcd:204::/48 --verb 3 --up /rhome/gert/src/openvpn-maint/ping8.sh --script-security 2"
+PING4_HOSTS_8a="$PING4_HOSTS_8"
+PING6_HOSTS_8a="$PING6_HOSTS_8"
+
+# Test 9: tcp / p2p tap / --tls-server
+# (Server runs without --server, so isn't doing any sort of NCP)
+# 09/2021: now it does... set --data-ciphers as well
+RUN_TITLE_9="udp / p2p tap / --tls-server --inetd on remote / pushed BF-CBC"
+OPENVPN_CONF_9="$OPENVPN_BASE_P2MP --dev tap --proto tcp --remote gentoo.ov.greenie.net 51204 --ifconfig 10.204.9.2 255.255.255.0 --comp-lzo --tun-ipv6 --ifconfig-ipv6 fd00:abcd:204:9::2/64 fd00:abcd:204:9::1 --cipher BF-CBC --data-ciphers BF-CBC --providers legacy default"
+PING4_HOSTS_9="10.204.9.1 10.204.0.1"
+PING6_HOSTS_9="fd00:abcd:204:9::1 fd00:abcd:204:0::1"
+
+# Test 9a: tcp / p2p tap / --tls-client
+RUN_TITLE_9a="udp / p2p tap / --tls-client (no --client) / p2p NCP, BF-CBC"
+OPENVPN_CONF_9a="--ca $CA_CERT --cert $CLIENT_CERT --key $CLIENT_KEY \
+	--remote-cert-tls server --nobind --comp-lzo --verb 3 \
+	--tls-cert-profile insecure --tls-client \
+--dev tap --proto tcp-client --remote gentoo.ov.greenie.net 51204 --ifconfig 10.204.9.2 255.255.255.0 --comp-lzo --tun-ipv6 --ifconfig-ipv6 fd00:abcd:204:9::2/64 fd00:abcd:204:9::1 --route 10.204.0.0 255.255.0.0 10.204.9.1 --route-ipv6 fd00:abcd:204::/48 --data-ciphers BF-CBC --providers legacy default"
+PING4_HOSTS_9a="10.204.9.1 10.204.0.1"
+PING6_HOSTS_9a="fd00:abcd:204:9::1 fd00:abcd:204:0::1"
+
+# Test 9b: tcp / p2p tap / --tls-server
+# 09/2021: same test as "9", but with --compat-mode 2.4.0 instead of --data-ciphers
+RUN_TITLE_9b="udp / p2p tap / --tls-server --inetd on remote / pushed BF-CBC / 9-with-compat-mode"
+OPENVPN_CONF_9b="$OPENVPN_BASE_P2MP --dev tap --proto tcp --remote gentoo.ov.greenie.net 51204 --ifconfig 10.204.9.2 255.255.255.0 --comp-lzo --tun-ipv6 --ifconfig-ipv6 fd00:abcd:204:9::2/64 fd00:abcd:204:9::1 --cipher BF-CBC --compat-mode 2.4.0 --providers legacy default"
+PING4_HOSTS_9b="10.204.9.1 10.204.0.1"
+PING6_HOSTS_9b="fd00:abcd:204:9::1 fd00:abcd:204:0::1"
+
+# Test 9x: tcp / p2p tap / --tls-client
+# (Server runs without --server, so isn't doing any sort of NCP)  <-- 09/21: now it does!
+RUN_TITLE_9x="udp / p2p tap / --tls-client (no --client) / p2p NCP to AES (frame!)"
+OPENVPN_CONF_9x="--ca $CA_CERT --cert $CLIENT_CERT --key $CLIENT_KEY \
+	--remote-cert-tls server --nobind --comp-lzo --verb 3 \
+	--tls-cert-profile insecure --tls-client \
+--dev tap --proto tcp-client --remote gentoo.ov.greenie.net 51204 --ifconfig 10.204.9.2 255.255.255.0 --comp-lzo --tun-ipv6 --ifconfig-ipv6 fd00:abcd:204:9::2/64 fd00:abcd:204:9::1 --route 10.204.0.0 255.255.0.0 10.204.9.1 --route-ipv6 fd00:abcd:204::/48"
+PING4_HOSTS_9x="10.204.9.1 10.204.0.1"
+PING6_HOSTS_9x="fd00:abcd:204:9::1 fd00:abcd:204:0::1"
+
+# UDP P2P TLS tests
+# kein --explicit-exit-notify, weil dann der Server stirbt (wat?)
+#
+# Test 11: UDP / p2p tun, TLS, SHA256
+RUN_TITLE_11="udp / p2p / TLS / SHA1-SHA256 (NCP)"
+BASE_CONF_11="--tls-client --tls-cert-profile insecure --cert $CLIENT_CERT --key $CLIENT_KEY \
+              --ca $CA_CERT --remote-cert-tls server --nobind --verb 3 \
+              --dev tun --proto udp --remote gentoo.ov.greenie.net --port 51201 \
+              --topology subnet --ifconfig 10.204.11.4 255.255.255.0 \
+              --ifconfig-ipv6 fd00:abcd:204:11::1004/64 fd00:abcd:204:11::1 \
+              --route 10.204.0.0 255.255.0.0 10.204.11.1 \
+              --route-ipv6 fd00:abcd:204::/48"
+
+OPENVPN_CONF_11="$BASE_CONF_11"
+PING4_HOSTS_11="10.204.11.1 10.204.0.1"
+PING6_HOSTS_11="fd00:abcd:204:11::1 fd00:abcd:204:0::1"
+
+# 23.5.22: das bricht, wenn man es direkt nach _11 macht, weil
+# der Server dann "dieselbe Instance" re-used, und AES-256-GCM macht
+RUN_TITLE_11a="udp / p2p / TLS / SHA256 (BF-only)"
+OPENVPN_CONF_11a="$BASE_CONF_11 --data-ciphers BF-CBC --auth SHA256 --providers legacy default"
+PING4_HOSTS_11a="$PING4_HOSTS_11"
+PING6_HOSTS_11a="$PING6_HOSTS_11"
