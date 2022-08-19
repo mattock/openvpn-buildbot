@@ -22,6 +22,7 @@ gcc \
 git \
 glib2 \
 gnutls \
+inetutils \
 jsoncpp \
 libcap \
 libcap-ng \
