@@ -14,6 +14,7 @@ autoconf-archive \
 automake \
 bzip2 \
 cmake \
+cmocka \
 curl \
 dbus-python \
 fping \

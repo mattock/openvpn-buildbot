@@ -20,6 +20,7 @@ iproute \
 jsoncpp-devel \
 libcap-devel \
 libcap-ng-devel \
+libcmocka-devel \
 libtool \
 libuuid-devel \
 libxml2 \
