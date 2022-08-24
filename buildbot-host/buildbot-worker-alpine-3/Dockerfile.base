@@ -1,4 +1,4 @@
-ARG IMAGE=alpine:3.13.6
+ARG IMAGE=alpine:3.16.2
 ARG DEPS_SH=install-openvpn-build-deps-alpine.sh
 ARG MY_NAME="buildbot-worker-alpine-3"
 ARG MY_VERSION="v1.0.1"

@@ -14,6 +14,7 @@ autoconf-archive \
 automake \
 bzip2 \
 cmake \
+cmocka \
 curl \
 dbus-python \
 fping \
@@ -21,6 +22,7 @@ gcc \
 git \
 glib2 \
 gnutls \
+inetutils \
 jsoncpp \
 libcap \
 libcap-ng \

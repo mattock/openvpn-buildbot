@@ -32,7 +32,6 @@ libasio-dev \
 libcap-dev \
 libcap-ng-dev \
 libcmocka-dev \
-libcmocka0 \
 libdebconfclient0 \
 libdpkg-perl \
 libfakeroot \
