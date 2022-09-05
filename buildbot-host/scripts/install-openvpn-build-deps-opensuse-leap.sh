@@ -46,6 +46,7 @@ python3-pip \
 python3-pyOpenSSL \
 python3-setuptools \
 python3-wheel \
+systemd-devel \
 tinyxml2-devel \
 xxhash-devel
 
