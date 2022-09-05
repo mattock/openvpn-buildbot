@@ -13,3 +13,6 @@ for DOCKERFILE in `find -maxdepth 2 -type f -regextype egrep -regex '.*/(Dockerf
     DIR=`echo $DOCKERFILE|cut -d "/" -f 2`
     ./rebuild.sh $DIR
 done
+
+# tends to produce several dangling images
+docker image prune --force
