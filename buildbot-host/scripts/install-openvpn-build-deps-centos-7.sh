@@ -48,6 +48,7 @@ python3-pip \
 python3-setuptools \
 python3-wheel \
 selinux-policy-devel \
+systemd-devel \
 tinyxml2 \
 tinyxml2-devel \
 zlib-devel

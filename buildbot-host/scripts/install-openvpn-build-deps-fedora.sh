@@ -44,6 +44,7 @@ python3-pyOpenSSL \
 python3-setuptools \
 python3-wheel \
 selinux-policy-devel \
+systemd-devel \
 tinyxml2-devel \
 which \
 xxhash-devel \
