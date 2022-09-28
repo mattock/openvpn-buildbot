@@ -59,7 +59,7 @@ source "amazon-ebs" "windows-server-2019" {
 build {
   source "amazon-ebs.windows-server-2019" {
     name     = "jenkins-agent-windows-server-2019"
-    ami_name = "jenkins-agent-windows-server-2019-1"
+    ami_name = "jenkins-agent-windows-server-2019-2"
   }
 
   provisioner "file" {

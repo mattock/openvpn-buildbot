@@ -8,7 +8,7 @@ param ([string] $workdir,
 
 Write-Host "Setting up Jenkins agent"
 
-& choco.exe install -y openjdk8
+& choco.exe install -y openjdk11
 CheckLastExitCode
 
 if (-Not (Test-Path $workdir)) {
