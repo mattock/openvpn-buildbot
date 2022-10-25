@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -ex
+
 apk add \
 autoconf \
 autoconf-archive \
@@ -18,6 +20,7 @@ libtool \
 libuuid \
 libxml2-dev \
 linux-headers \
+linux-lts-dev \
 linux-pam-dev \
 lz4-dev \
 lzo-dev \
@@ -38,5 +41,7 @@ py3-wheel \
 shadow \
 tinyxml2-dev
 
+# Hack to ensure that kernel headers can be found from a predictable place
+ln -s /lib/modules/$(ls /lib/modules|head -n 1)/build /buildbot/kernel-headers
 # alpine doesn't have fping6 symlink, t_client.sh can't deal
 ln -s /usr/sbin/fping /usr/sbin/fping6
