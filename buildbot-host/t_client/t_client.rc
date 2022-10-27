@@ -169,7 +169,7 @@ PING6_HOSTS_2="fd00:abcd:194:2::1 fd00:abcd:194:0::1"
 
 #RUN_TITLE_2a="udp / p2pm / v6-only / --multihome / --ncp-disable"
 RUN_TITLE_2a="udp / p2pm / v6-only / --multihome"
-OPENVPN_CONF_2a="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51194 --route-nopull --route-ipv6 fd00:abcd:194::/48 --multihome --cipher BF-CBC --data-ciphers BF-CBC --providers legacy default"
+OPENVPN_CONF_2a="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51194 --route-nopull --route-ipv6 fd00:abcd:194::/48 --multihome --nobind --cipher BF-CBC --data-ciphers BF-CBC --providers legacy default"
 # geht nicht auf FreeBSD
 #if [ `uname -o` = "GNU/Linux" ] ; then
 #    OPENVPN_CONF_2a="$OPENVPN_CONF_2a --mtu-disc yes"
