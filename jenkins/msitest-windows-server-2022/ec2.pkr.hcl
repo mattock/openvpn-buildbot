@@ -8,7 +8,7 @@ packer {
 }
 
 locals {
-  ami_name = "msitest-agent-windows-server-2022-1"
+  ami_name = "msitest-agent-windows-server-2022-2"
   user_name = "Administrator"
 }
 
@@ -74,6 +74,10 @@ build {
     sources      = [ "../../scripts/" ]
     destination  = "C:/Windows/Temp/scripts/"
   }
+  provisioner "powershell" {
+    only  = ["amazon-ebs.msitest-windows-server-2022"]
+    inline = ["& 'C:/Program Files/Amazon/EC2Launch/EC2Launch.exe' status --block"]
+  }
   provisioner "file" {
     sources      = [ "ta/" ]
     destination  = "C:/TA"
@@ -92,8 +96,9 @@ build {
   # Required for some installers
   #provisioner "windows-restart" {}
   provisioner "powershell" {
+    only  = ["amazon-ebs.msitest-windows-server-2022"]
     # make sure to run user data scripts on first boot from AMI
-    inline = ["C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/InitializeInstance.ps1 -Schedule"]
+    inline = ["& 'C:/Program Files/Amazon/EC2Launch/EC2Launch.exe' reset --clean"]
   }
 
 }
