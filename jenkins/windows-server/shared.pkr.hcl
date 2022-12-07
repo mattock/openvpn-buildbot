@@ -32,6 +32,13 @@ variable "jenkinsmaster_address" {
   type = string
 }
 
+variable "run_tags" {
+  type = map(string)
+  default = {
+    Name = "openvpn-buildbot Packer build"
+  }
+}
+
 source "amazon-ebs" "windows-server-2019" {
   communicator     = "winrm"
   force_deregister = true
@@ -63,6 +70,15 @@ source "amazon-ebs" "windows-server-2019" {
     SourceAMI     = "{{ .SourceAMI }}"
     SourceAMIName = "{{ .SourceAMIName }}"
     Login         = local.user_name
+  }
+
+  dynamic "run_tag" {
+    for_each = var.run_tags
+
+    content {
+      key                 = run_tag.key
+      value               = run_tag.value
+    }
   }
 }
 
@@ -97,5 +113,14 @@ source "amazon-ebs" "windows-server-2022" {
     SourceAMI     = "{{ .SourceAMI }}"
     SourceAMIName = "{{ .SourceAMIName }}"
     Login         = local.user_name
+  }
+
+  dynamic "run_tag" {
+    for_each = var.run_tags
+
+    content {
+      key                 = run_tag.key
+      value               = run_tag.value
+    }
   }
 }
