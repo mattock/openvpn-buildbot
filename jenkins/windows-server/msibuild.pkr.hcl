@@ -51,6 +51,6 @@ build {
   }
   provisioner "powershell" {
     only   = ["amazon-ebs.msibuild-windows-server-2019-2.6"]
-    inline = ["C:/Windows/Temp/scripts/build-deps.ps1 -workdir C:\\buildbot\\windows-server-2019-static-msbuild -openvpn_ref master -openvpn_build_ref master -openvpn_gui master -openssl openssl3 -debug"]
+    inline = ["C:/Windows/Temp/scripts/build-deps.ps1 -workdir C:\\buildbot\\windows-server-2019-static-msbuild -openvpn_ref master -openvpn_build_ref master -openvpn_gui master -debug"]
   }
 }
