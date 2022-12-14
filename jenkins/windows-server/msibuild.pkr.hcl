@@ -40,7 +40,7 @@ build {
     inline = ["C:/Windows/Temp/scripts/pip.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/scripts/vsbuildtools.ps1"]
+    inline = ["C:/Windows/Temp/scripts/vsbuildtools.ps1 -version 2019"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/vcpkg.ps1 -workdir C:\\buildbot\\windows-server-2019-static-msbuild"]
