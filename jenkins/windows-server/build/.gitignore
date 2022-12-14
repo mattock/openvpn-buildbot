@@ -1,1 +1,4 @@
 administrators_authorized_keys
+build-and-package-env.ps1
+customerCA.crt
+signingCert.p7b
