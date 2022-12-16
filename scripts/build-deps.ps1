@@ -2,7 +2,6 @@ param ([string] $workdir,
        [string] $openvpn_ref = "master",
        [string] $openvpn_build_ref = "master",
        [string] $openvpn_gui_ref = "master",
-       [string] $openssl = "openssl3",
        [switch] $debug)
 
 if ($debug -eq $true) {
@@ -40,12 +39,12 @@ cd "${workdir}\vcpkg"
 # Install OpenVPN build dependencies
 $architectures = @('x64','x86','arm64')
 ForEach ($arch in $architectures) {
-    # openssl3:${arch}-windows is required for openvpn-gui builds
+    # openssl:${arch}-windows is required for openvpn-gui builds
     & .\vcpkg.exe `
         --overlay-ports "${workdir}\openvpn\contrib\vcpkg-ports" `
         --overlay-ports "${workdir}\openvpn-build\windows-msi\vcpkg-ports" `
 	--overlay-triplets "${workdir}\openvpn\contrib\vcpkg-triplets" `
-	install --triplet "${arch}-windows-ovpn" lz4 lzo $openssl pkcs11-helper tap-windows6 "${openssl}:${arch}-windows"
+	install --triplet "${arch}-windows-ovpn" json-c lz4 lzo openssl pkcs11-helper tap-windows6 "openssl:${arch}-windows"
 
     & .\vcpkg.exe `
         --overlay-ports "${workdir}\openvpn\contrib\vcpkg-ports" `

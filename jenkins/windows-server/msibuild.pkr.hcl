@@ -40,7 +40,7 @@ build {
     inline = ["C:/Windows/Temp/scripts/pip.ps1"]
   }
   provisioner "powershell" {
-    inline = ["C:/Windows/Temp/scripts/vsbuildtools.ps1"]
+    inline = ["C:/Windows/Temp/scripts/vsbuildtools.ps1 -version 2019"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/vcpkg.ps1 -workdir C:\\buildbot\\windows-server-2019-static-msbuild"]
@@ -51,6 +51,9 @@ build {
   }
   provisioner "powershell" {
     only   = ["amazon-ebs.msibuild-windows-server-2019-2.6"]
-    inline = ["C:/Windows/Temp/scripts/build-deps.ps1 -workdir C:\\buildbot\\windows-server-2019-static-msbuild -openvpn_ref master -openvpn_build_ref master -openvpn_gui master -openssl openssl3 -debug"]
+    inline = ["C:/Windows/Temp/scripts/build-deps.ps1 -workdir C:\\buildbot\\windows-server-2019-static-msbuild -openvpn_ref master -openvpn_build_ref master -openvpn_gui master -debug"]
+  }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/scripts/aws-cloudhsm.ps1 -configfiles C:\\config -workdir C:\\buildbot\\windows-server-2019-static-msbuild"]
   }
 }
