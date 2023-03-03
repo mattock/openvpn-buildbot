@@ -28,10 +28,6 @@ variable "windows_server_winrm_password" {
   type = string
 }
 
-variable "jenkinsmaster_address" {
-  type = string
-}
-
 variable "run_tags" {
   type = map(string)
   default = {

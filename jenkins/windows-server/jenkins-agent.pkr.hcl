@@ -1,16 +1,20 @@
 build {
   source "amazon-ebs.windows-server-2019" {
     name     = "jenkins-agent-windows-server-2019"
-    ami_name = "jenkins-agent-windows-server-2019-3"
+    ami_name = "jenkins-agent-windows-server-2019-4"
   }
   source "amazon-ebs.windows-server-2022" {
     name     = "jenkins-agent-windows-server-2022"
-    ami_name = "jenkins-agent-windows-server-2022-1"
+    ami_name = "jenkins-agent-windows-server-2022-2"
   }
 
   provisioner "file" {
     sources      = [ "../../scripts/" ]
     destination  = "C:/Windows/Temp/scripts/"
+  }
+  provisioner "file" {
+    sources      = [ "jenkins/" ]
+    destination  = "C:/config"
   }
   provisioner "powershell" {
     only  = ["amazon-ebs.jenkins-agent-windows-server-2022"]
@@ -18,6 +22,11 @@ build {
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/base.ps1"]
+  }
+  provisioner "powershell" {
+    elevated_password = var.windows_server_winrm_password
+    elevated_user     = local.user_name
+    inline = ["C:/Windows/Temp/scripts/openssh.ps1 -configfiles C:\\config"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/git.ps1"]
@@ -43,11 +52,11 @@ build {
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/create-buildbot-user.ps1 -password ${var.windows_server_buildbot_user_password}"]
   }
+  provisioner "powershell" {
+    inline = ["C:/Windows/Temp/scripts/jenkins-agent-ssh.ps1 -workdir C:\\Jenkins"]
+  }
   # Required for some installers
   provisioner "windows-restart" {}
-  provisioner "powershell" {
-    inline = ["C:/Windows/Temp/scripts/jenkins-agent.ps1 -workdir C:\\Jenkins -jenkins ${var.jenkinsmaster_address} -user buildbot -password ${var.windows_server_buildbot_user_password}"]
-  }
   provisioner "powershell" {
     only  = ["amazon-ebs.jenkins-agent-windows-server-2019"]
     # make sure to run user data scripts on first boot from AMI
