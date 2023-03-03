@@ -8,6 +8,7 @@ autoconf \
 autoconf-archive \
 automake \
 bzip2 \
+ccache \
 cmake \
 fping \
 gcc \

@@ -9,6 +9,7 @@ autoconf-archive \
 automake \
 bzip2 \
 cmake \
+ccache \
 curl \
 fping \
 gcc \

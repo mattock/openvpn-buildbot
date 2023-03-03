@@ -13,6 +13,7 @@ autoconf \
 autoconf-archive \
 automake \
 bzip2 \
+ccache \
 cmake3 \
 devtoolset-10 \
 fping \
