@@ -24,6 +24,11 @@ variable "windows_server_ec2_subnet" {
   default = null
 }
 
+variable "windows_server_instance_profile" {
+  type = string
+  default = null
+}
+
 variable "windows_server_winrm_password" {
   type = string
 }
@@ -39,6 +44,7 @@ source "amazon-ebs" "windows-server-2019" {
   communicator     = "winrm"
   force_deregister = true
   instance_type    = "c5a.xlarge"
+  iam_instance_profile = var.windows_server_instance_profile
   region           = var.windows_server_ec2_region
   subnet_id        = var.windows_server_ec2_subnet
 
@@ -82,6 +88,7 @@ source "amazon-ebs" "windows-server-2022" {
   communicator     = "winrm"
   force_deregister = true
   instance_type    = "c5a.xlarge"
+  iam_instance_profile = var.windows_server_instance_profile
   region           = var.windows_server_ec2_region
   subnet_id        = var.windows_server_ec2_subnet
 
