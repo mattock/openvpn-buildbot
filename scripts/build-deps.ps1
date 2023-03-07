@@ -1,4 +1,5 @@
 param ([string] $workdir,
+       [string] $configfiles,
        [string] $openvpn_ref = "master",
        [string] $openvpn_build_ref = "master",
        [string] $openvpn_gui_ref = "master",
@@ -34,7 +35,13 @@ if (-Not (Test-Path "${workdir}\openvpn-gui")) {
   if ($debug -eq $true) { CheckLastExitCode }
 }
 
+& $PSScriptRoot\vcpkg.ps1 -workdir "${workdir}" -debug:$debug
+
 cd "${workdir}\vcpkg"
+
+# Make sure environment is consistent with actual build
+$Env:PATH = "C:\Program Files\Amazon\AWSCLIV2\;$Env:PATH"
+. "${configfiles}\build-and-package-env.ps1"
 
 # Install OpenVPN build dependencies
 $architectures = @('x64','x86','arm64')
