@@ -14,6 +14,7 @@ autoconf \
 autoconf-archive \
 automake \
 build-essential \
+ccache \
 cmake \
 curl \
 debhelper \

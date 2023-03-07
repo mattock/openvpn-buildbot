@@ -13,6 +13,7 @@ RUN set -ex; \
 
 # Install buildbot
 ARG MY_NAME
+ARG PIP_INSTALL_OPTS
 COPY scripts/install-buildbot.sh t_client/*.crt t_client/*.rc ${MY_NAME}/t_client.* /buildbot/
 RUN set -ex; \
     /buildbot/install-buildbot.sh; \

@@ -7,6 +7,7 @@ autoconf \
 autoconf-archive \
 automake \
 bash \
+ccache \
 cmake \
 cmocka-dev \
 curl \
