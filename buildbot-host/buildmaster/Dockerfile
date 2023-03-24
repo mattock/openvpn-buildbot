@@ -13,7 +13,7 @@ ENV BASEDIR=/var/lib/buildbot/masters/default
 RUN mkdir -p $BASEDIR
 
 # Required for latent docker buildslaves
-RUN . /buildbot_venv/bin/activate && pip install docker || false
+RUN . /buildbot_venv/bin/activate && pip install docker==5.0.3 || false
 RUN set -ex; \
     apt-get update && apt-get -y install patch || false
 
