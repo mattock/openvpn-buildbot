@@ -20,15 +20,16 @@ variable "windows_server_ec2_region" {
 }
 
 variable "windows_server_ec2_subnet" {
-  type = string
+  type    = string
+  default = null
+}
+
+variable "windows_server_instance_profile" {
+  type    = string
   default = null
 }
 
 variable "windows_server_winrm_password" {
-  type = string
-}
-
-variable "jenkinsmaster_address" {
   type = string
 }
 
@@ -40,21 +41,22 @@ variable "run_tags" {
 }
 
 source "amazon-ebs" "windows-server-2019" {
-  communicator     = "winrm"
-  force_deregister = true
-  instance_type    = "c5a.xlarge"
-  region           = var.windows_server_ec2_region
-  subnet_id        = var.windows_server_ec2_subnet
+  communicator         = "winrm"
+  force_deregister     = true
+  instance_type        = "c5a.xlarge"
+  iam_instance_profile = var.windows_server_instance_profile
+  region               = var.windows_server_ec2_region
+  subnet_id            = var.windows_server_ec2_subnet
 
   launch_block_device_mappings {
-    device_name = "/dev/sda1"
-    volume_size = 80
-    volume_type = "gp2"
+    device_name           = "/dev/sda1"
+    volume_size           = 80
+    volume_type           = "gp2"
     delete_on_termination = true
   }
 
   source_ami_filter {
-    filters     = {
+    filters = {
       name                = "Windows_Server-2019-English-Full-Base-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
@@ -62,11 +64,11 @@ source "amazon-ebs" "windows-server-2019" {
     most_recent = true
     owners      = ["801119661308"]
   }
-  user_data        = templatefile("${path.root}/../../pkrtpl/bootstrap_win.pkrtpl.hcl", { winrm_password = var.windows_server_winrm_password })
-  winrm_password   = var.windows_server_winrm_password
-  winrm_username   = "Administrator"
+  user_data      = templatefile("${path.root}/../../pkrtpl/bootstrap_win.pkrtpl.hcl", { winrm_password = var.windows_server_winrm_password })
+  winrm_password = var.windows_server_winrm_password
+  winrm_username = "Administrator"
 
-  tags          = {
+  tags = {
     SourceAMI     = "{{ .SourceAMI }}"
     SourceAMIName = "{{ .SourceAMIName }}"
     Login         = local.user_name
@@ -76,28 +78,29 @@ source "amazon-ebs" "windows-server-2019" {
     for_each = var.run_tags
 
     content {
-      key                 = run_tag.key
-      value               = run_tag.value
+      key   = run_tag.key
+      value = run_tag.value
     }
   }
 }
 
 source "amazon-ebs" "windows-server-2022" {
-  communicator     = "winrm"
-  force_deregister = true
-  instance_type    = "c5a.xlarge"
-  region           = var.windows_server_ec2_region
-  subnet_id        = var.windows_server_ec2_subnet
+  communicator         = "winrm"
+  force_deregister     = true
+  instance_type        = "c5a.xlarge"
+  iam_instance_profile = var.windows_server_instance_profile
+  region               = var.windows_server_ec2_region
+  subnet_id            = var.windows_server_ec2_subnet
 
   launch_block_device_mappings {
-    device_name = "/dev/sda1"
-    volume_size = 80
-    volume_type = "gp2"
+    device_name           = "/dev/sda1"
+    volume_size           = 80
+    volume_type           = "gp2"
     delete_on_termination = true
   }
 
   source_ami_filter {
-    filters     = {
+    filters = {
       name                = "Windows_Server-2022-English-Full-Base-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
@@ -105,11 +108,11 @@ source "amazon-ebs" "windows-server-2022" {
     most_recent = true
     owners      = ["801119661308"]
   }
-  user_data        = templatefile("${path.root}/../../pkrtpl/bootstrap_win.pkrtpl.hcl", { winrm_password = var.windows_server_winrm_password })
-  winrm_password   = var.windows_server_winrm_password
-  winrm_username   = "Administrator"
+  user_data      = templatefile("${path.root}/../../pkrtpl/bootstrap_win.pkrtpl.hcl", { winrm_password = var.windows_server_winrm_password })
+  winrm_password = var.windows_server_winrm_password
+  winrm_username = "Administrator"
 
-  tags          = {
+  tags = {
     SourceAMI     = "{{ .SourceAMI }}"
     SourceAMIName = "{{ .SourceAMIName }}"
     Login         = local.user_name
@@ -119,8 +122,8 @@ source "amazon-ebs" "windows-server-2022" {
     for_each = var.run_tags
 
     content {
-      key                 = run_tag.key
-      value               = run_tag.value
+      key   = run_tag.key
+      value = run_tag.value
     }
   }
 }

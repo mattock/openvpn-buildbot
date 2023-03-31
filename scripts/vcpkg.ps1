@@ -5,6 +5,14 @@ if ($debug -eq $true) {
   . $PSScriptRoot\ps_support.ps1
 }
 
+# Required for S3 binary caching
+Write-Host "Installing and setting up aws CLI"
+
+Invoke-WebRequest https://awscli.amazonaws.com/AWSCLIV2.msi -Outfile C:\AWSCLIV2.msi
+
+Start-Process msiexec.exe -ArgumentList '/i C:\AWSCLIV2.msi /quiet /norestart /log C:\cli-install.txt' -Wait
+CheckLastExitCode
+
 if (-Not (Test-Path $workdir)) {
   New-Item -Type directory $workdir
   if ($debug -eq $true) { CheckLastExitCode }
