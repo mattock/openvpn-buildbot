@@ -9,12 +9,12 @@ build {
   }
 
   provisioner "file" {
-    sources      = [ "../../scripts/" ]
-    destination  = "C:/Windows/Temp/scripts/"
+    sources     = ["../../scripts/"]
+    destination = "C:/Windows/Temp/scripts/"
   }
   provisioner "file" {
-    sources      = [ "build/" ]
-    destination  = "C:/config"
+    sources     = ["build/"]
+    destination = "C:/config"
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/base.ps1"]
@@ -22,7 +22,7 @@ build {
   provisioner "powershell" {
     elevated_password = var.windows_server_winrm_password
     elevated_user     = local.user_name
-    inline = ["C:/Windows/Temp/scripts/openssh.ps1 -configfiles C:\\config"]
+    inline            = ["C:/Windows/Temp/scripts/openssh.ps1 -configfiles C:\\config"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/git.ps1"]

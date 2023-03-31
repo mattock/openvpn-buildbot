@@ -9,15 +9,15 @@ build {
   }
 
   provisioner "file" {
-    sources      = [ "../../scripts/" ]
-    destination  = "C:/Windows/Temp/scripts/"
+    sources     = ["../../scripts/"]
+    destination = "C:/Windows/Temp/scripts/"
   }
   provisioner "file" {
-    sources      = [ "jenkins/" ]
-    destination  = "C:/config"
+    sources     = ["jenkins/"]
+    destination = "C:/config"
   }
   provisioner "powershell" {
-    only  = ["amazon-ebs.jenkins-agent-windows-server-2022"]
+    only   = ["amazon-ebs.jenkins-agent-windows-server-2022"]
     inline = ["& 'C:/Program Files/Amazon/EC2Launch/EC2Launch.exe' status --block"]
   }
   provisioner "powershell" {
@@ -26,7 +26,7 @@ build {
   provisioner "powershell" {
     elevated_password = var.windows_server_winrm_password
     elevated_user     = local.user_name
-    inline = ["C:/Windows/Temp/scripts/openssh.ps1 -configfiles C:\\config"]
+    inline            = ["C:/Windows/Temp/scripts/openssh.ps1 -configfiles C:\\config"]
   }
   provisioner "powershell" {
     inline = ["C:/Windows/Temp/scripts/git.ps1"]
@@ -58,12 +58,12 @@ build {
   # Required for some installers
   provisioner "windows-restart" {}
   provisioner "powershell" {
-    only  = ["amazon-ebs.jenkins-agent-windows-server-2019"]
+    only = ["amazon-ebs.jenkins-agent-windows-server-2019"]
     # make sure to run user data scripts on first boot from AMI
     inline = ["C:/ProgramData/Amazon/EC2-Windows/Launch/Scripts/InitializeInstance.ps1 -Schedule"]
   }
   provisioner "powershell" {
-    only  = ["amazon-ebs.jenkins-agent-windows-server-2022"]
+    only = ["amazon-ebs.jenkins-agent-windows-server-2022"]
     # make sure to run user data scripts on first boot from AMI
     inline = ["& 'C:/Program Files/Amazon/EC2Launch/EC2Launch.exe' reset --clean"]
   }
