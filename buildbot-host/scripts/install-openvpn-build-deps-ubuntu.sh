@@ -54,6 +54,7 @@ libxml2-utils \
 libxxhash-dev \
 make \
 net-tools \
+openssh-client \
 pkg-config \
 po-debconf \
 policykit-1 \

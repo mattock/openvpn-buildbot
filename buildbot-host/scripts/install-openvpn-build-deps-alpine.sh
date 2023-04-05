@@ -31,6 +31,7 @@ mbedtls-dev \
 net-tools \
 pkgconf \
 opensc-dev \
+openssh-client \
 openssl-dev \
 python3 \
 python3-dev \
