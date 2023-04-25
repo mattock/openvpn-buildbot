@@ -1,6 +1,6 @@
 ARG MY_NAME="buildmaster"
-ARG MY_VERSION="v2.2.1"
-ARG IMAGE=buildbot/buildbot-master:v3.5.0
+ARG MY_VERSION="v2.2.2"
+ARG IMAGE=buildbot/buildbot-master:v3.7.0
 
 FROM $IMAGE
 
@@ -15,14 +15,13 @@ RUN mkdir -p $BASEDIR
 # Required for latent docker buildslaves
 RUN . /buildbot_venv/bin/activate && pip install docker==5.0.3 || false
 RUN set -ex; \
-    apt-get update && apt-get -y install patch || false
+    apt-get update || false
 
 COPY buildmaster/buildbot.tac $BASEDIR
 COPY buildmaster/start_buildmaster.sh $BASEDIR
 COPY buildmaster/*.cfg $BASEDIR/
 COPY buildmaster/master*.ini $BASEDIR/
 COPY buildmaster/worker*.ini $BASEDIR/
-COPY buildmaster/vstudio.py.patch $BASEDIR
 COPY buildmaster/build-openvpn-gui.ps1 $BASEDIR
 COPY buildmaster/msbuild-x64.bat $BASEDIR
 COPY buildmaster/msbuild-x64_x86.bat $BASEDIR
@@ -37,9 +36,6 @@ ADD buildmaster/openvpn $BASEDIR/openvpn
 ADD buildmaster/openvpn3 $BASEDIR/openvpn3
 ADD buildmaster/openvpn3-linux $BASEDIR/openvpn3-linux
 ADD buildmaster/ovpn-dco $BASEDIR/ovpn-dco
-
-RUN set -ex; \
-    patch /buildbot_venv/lib/python3.9/site-packages/buildbot/steps/vstudio.py $BASEDIR/vstudio.py.patch
 
 COPY scripts/ensure-tun-is-present.sh $BASEDIR
 
