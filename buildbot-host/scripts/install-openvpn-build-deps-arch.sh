@@ -34,6 +34,7 @@ lz4 \
 lzo \
 make \
 mbedtls \
+openssh \
 openssl \
 pam \
 pkcs11-helper \

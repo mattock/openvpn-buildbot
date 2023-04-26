@@ -54,6 +54,7 @@ libxml2-utils \
 libxxhash-dev \
 make \
 net-tools \
+openssh-client \
 pkg-config \
 po-debconf \
 policykit-1 \
@@ -68,6 +69,7 @@ python3-pip \
 python3-roman \
 python3-setuptools \
 python3-wheel \
+uncrustify \
 uuid-dev
 
 # Install kernel headers for building ovpn-dco. Determining the correct package
