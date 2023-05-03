@@ -30,7 +30,7 @@ fi
 tar -xf openvpn-$TBV.tar.gz
 mv openvpn-$TBV.tar.gz openvpn_$SV.orig.tar.gz
 mv openvpn-$TBV openvpn-$SV
-cp -a ../openvpn-build/debian-sbuild/packaging/$WORKERNAME/debian openvpn-$SV/
+cp -a ../openvpn-build/debian-sbuild/openvpn/$WORKERNAME/debian openvpn-$SV/
 ./debian-generate-changelog.sh $SV
 mv debian-changelog openvpn-$SV/debian/changelog
 
