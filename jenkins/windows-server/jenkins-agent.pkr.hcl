@@ -1,11 +1,11 @@
 build {
   source "amazon-ebs.windows-server-2019" {
     name     = "jenkins-agent-windows-server-2019"
-    ami_name = "jenkins-agent-windows-server-2019-4"
+    ami_name = "jenkins-agent-windows-server-2019-5"
   }
   source "amazon-ebs.windows-server-2022" {
     name     = "jenkins-agent-windows-server-2022"
-    ami_name = "jenkins-agent-windows-server-2022-2"
+    ami_name = "jenkins-agent-windows-server-2022-3"
   }
 
   provisioner "file" {
