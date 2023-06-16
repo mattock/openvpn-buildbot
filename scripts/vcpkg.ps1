@@ -11,7 +11,7 @@ Write-Host "Installing and setting up aws CLI"
 Invoke-WebRequest https://awscli.amazonaws.com/AWSCLIV2.msi -Outfile C:\AWSCLIV2.msi
 
 Start-Process msiexec.exe -ArgumentList '/i C:\AWSCLIV2.msi /quiet /norestart /log C:\cli-install.txt' -Wait
-CheckLastExitCode
+if ($debug -eq $true) { CheckLastExitCode }
 
 if (-Not (Test-Path $workdir)) {
   New-Item -Type directory $workdir
