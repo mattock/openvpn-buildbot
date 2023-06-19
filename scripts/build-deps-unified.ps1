@@ -36,20 +36,17 @@ $Env:PATH = "C:\Program Files\Amazon\AWSCLIV2\;$Env:PATH"
 # Install OpenVPN build dependencies
 $architectures = @('x64','x86','arm64')
 ForEach ($arch in $architectures) {
-    # openssl:${arch}-windows is required for openvpn-gui builds
     & .\vcpkg.exe `
         --overlay-ports "${openvpn_build}\src\openvpn\contrib\vcpkg-ports" `
         --overlay-ports "${openvpn_build}\windows-msi\vcpkg-ports" `
 	--overlay-triplets "${openvpn_build}\src\openvpn\contrib\vcpkg-triplets" `
-	install --triplet "${arch}-windows-ovpn" json-c lz4 lzo openssl pkcs11-helper tap-windows6 "openssl:${arch}-windows"
+	install --triplet "${arch}-windows-ovpn" json-c lz4 lzo openssl pkcs11-helper tap-windows6
 
     & .\vcpkg.exe `
         --overlay-ports "${openvpn_build}\src\openvpn\contrib\vcpkg-ports" `
         --overlay-ports "${openvpn_build}\windows-msi\vcpkg-ports" `
 	--overlay-triplets "${openvpn_build}\src\openvpn\contrib\vcpkg-triplets" `
         upgrade --no-dry-run
-
-    & .\vcpkg.exe integrate install
 }
 
 # Ensure that we can convert the man page from rst to html

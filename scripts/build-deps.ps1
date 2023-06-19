@@ -58,8 +58,6 @@ ForEach ($arch in $architectures) {
         --overlay-ports "${workdir}\openvpn-build\windows-msi\vcpkg-ports" `
 	--overlay-triplets "${workdir}\openvpn\contrib\vcpkg-triplets" `
         upgrade --no-dry-run
-
-    & .\vcpkg.exe integrate install
 }
 
 # Ensure that we can convert the man page from rst to html

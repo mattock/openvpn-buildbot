@@ -8,6 +8,7 @@ packer {
 }
 
 locals {
+  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
   user_name = "Administrator"
 }
 
