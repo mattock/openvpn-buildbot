@@ -11,12 +11,12 @@ winrm delete winrm/config/listener?Address=*+Transport=HTTP  2>$Null
 winrm delete winrm/config/listener?Address=*+Transport=HTTPS 2>$Null
 
 # Disable group policies which block basic authentication and unencrypted login
-
-Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM\Client -Name AllowBasic -Value 1
-Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM\Client -Name AllowUnencryptedTraffic -Value 1
-Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM\Service -Name AllowBasic -Value 1
-Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM\Service -Name AllowUnencryptedTraffic -Value 1
-
+if( Test-Path -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM ) {
+    Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM\Client -Name AllowBasic -Value 1
+    Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM\Client -Name AllowUnencryptedTraffic -Value 1
+    Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM\Service -Name AllowBasic -Value 1
+    Set-ItemProperty -Path HKLM:\Software\Policies\Microsoft\Windows\WinRM\Service -Name AllowUnencryptedTraffic -Value 1
+}
 
 # Create a new WinRM listener and configure
 winrm create winrm/config/listener?Address=*+Transport=HTTP
