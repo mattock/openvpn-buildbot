@@ -1,6 +1,6 @@
 ARG MY_NAME="buildmaster"
-ARG MY_VERSION="v2.3.0"
-ARG IMAGE=buildbot/buildbot-master:v3.7.0
+ARG MY_VERSION="v2.3.1"
+ARG IMAGE=buildbot/buildbot-master:v3.9.2
 
 FROM $IMAGE
 
