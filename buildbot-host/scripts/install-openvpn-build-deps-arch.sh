@@ -33,7 +33,7 @@ linux-headers \
 lz4 \
 lzo \
 make \
-mbedtls \
+mbedtls2 \
 openssh \
 openssl \
 pam \
