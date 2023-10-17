@@ -29,6 +29,10 @@ if [ -f "${DIR}/Dockerfile.base" ]; then
   echo "Constructing Dockerfile"
   DYNAMIC_DOCKERFILE="yes"
   cat $DIR/Dockerfile.base snippets/Dockerfile.common > $DIR/Dockerfile
+  if [ -f "${DIR}/Dockerfile.suffix" ]; then
+    echo "Appending Dockerfile.suffix"
+    cat $DIR/Dockerfile.suffix >> $DIR/Dockerfile
+  fi
 elif [ -f "${DIR}/Dockerfile" ]; then
   echo "Using static Dockerfile"
 else

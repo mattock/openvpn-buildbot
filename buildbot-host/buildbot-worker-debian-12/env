@@ -1,3 +1,3 @@
 BUILDMASTER=buildmaster
-WORKERNAME=fedora-37
+WORKERNAME=debian-12
 WORKERPASS=vagrant

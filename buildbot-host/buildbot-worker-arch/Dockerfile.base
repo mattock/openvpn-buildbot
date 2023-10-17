@@ -1,5 +1,6 @@
 ARG IMAGE=docker.io/library/archlinux:latest
 ARG DEPS_SH=install-openvpn-build-deps-arch.sh
 ARG MY_NAME="buildbot-worker-arch"
+ARG PIP_INSTALL_OPTS="--break-system-packages"
 ARG MY_VERSION="v1.0.2"
 ARG ASIO_REF="master"
