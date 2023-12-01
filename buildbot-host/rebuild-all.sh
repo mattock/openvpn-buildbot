@@ -16,5 +16,5 @@ for DOCKERFILE in $(find -maxdepth 2 -type f -regextype egrep -regex '.*/(Docker
     ./rebuild.sh "$DIR"
 done
 
-# tends to produce several dangling images
-docker image prune --force
+# clean up dangling images and build cache
+docker system prune --force
