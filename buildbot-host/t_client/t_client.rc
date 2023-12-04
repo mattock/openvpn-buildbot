@@ -36,11 +36,15 @@ fi
 #
 REMOTE=conn-test-server.openvpn.org
 REMOTE4=199.102.77.82
+
+SOCKS_PROXY="community-test-proxy.openvpn.in 1080"
+HTTP_PROXY="community-test-proxy.openvpn.in 8080"
+
 #REMOTE=gentoo.ov.greenie.net
 #
 # tests to run (list suffixes for config stanzas below)
 #
-TEST_RUN_LIST="1 1a 2 2a 2b 2c 2f 3 4 4a 4b 5 6"
+TEST_RUN_LIST="1 1a 1b 1c 1d 1e 2 2a 2b 2c 2d 2e 2f 3 4 4a 4b 5 6"
 #TEST_RUN_LIST="1 1a 1b 1c 1d 1e 2 2a 2b 2c 2d 2e 2f 3 4 4a 4b 5 6 8 8a 9 9a 9b 9x 11 11a"
 #TEST_RUN_LIST="1 1a 2 3"
 #TEST_RUN_LIST="1a"
@@ -107,7 +111,7 @@ PING6_HOSTS_1a="$PING6_HOSTS_1"
 #
 
 RUN_TITLE_1b="tcp4 / http proxy / p2pm / top net30"
-OPENVPN_CONF_1b="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --http-proxy wwwcache.space.net 3128"
+OPENVPN_CONF_1b="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --http-proxy $HTTP_PROXY"
 PING4_HOSTS_1b="$PING4_HOSTS_1"
 PING6_HOSTS_1b="$PING6_HOSTS_1"
 
@@ -116,7 +120,7 @@ PING6_HOSTS_1b="$PING6_HOSTS_1"
 #
 
 RUN_TITLE_1c="tcp6 / http proxy / p2pm / top net30"
-OPENVPN_CONF_1c="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --http-proxy 2001:608:2:81::15 3128"
+OPENVPN_CONF_1c="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --http-proxy $HTTP_PROXY"
 PING4_HOSTS_1c="$PING4_HOSTS_1"
 PING6_HOSTS_1c="$PING6_HOSTS_1"
 
@@ -125,18 +129,16 @@ PING6_HOSTS_1c="$PING6_HOSTS_1"
 #
 
 RUN_TITLE_1d="tcp4 / socks proxy / p2pm / top net30"
-OPENVPN_CONF_1d="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --socks-proxy socks.ov.greenie.net 1080"
+OPENVPN_CONF_1d="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --socks-proxy $SOCKS_PROXY"
 PING4_HOSTS_1d="$PING4_HOSTS_1"
 PING6_HOSTS_1d="$PING6_HOSTS_1"
 
 #
-# Test 1e: TCP p2mp tun, IPv6 SOCKS proxy (localhost, ssh -D 2222)
+# Test 1e: TCP p2mp tun, IPv6 SOCKS proxy
 #
 
-#RUN_TITLE_1e="tcp6 / socks proxy / p2pm / top net30 [needs ssh -D 2222]"
 RUN_TITLE_1e="tcp6 / socks proxy / p2pm / top net30"
-#OPENVPN_CONF_1e="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --socks-proxy ::1 2222"
-OPENVPN_CONF_1e="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --socks-proxy socks.ov.greenie.net 1080"
+OPENVPN_CONF_1e="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --socks-proxy $SOCKS_PROXY"
 PING4_HOSTS_1e="$PING4_HOSTS_1"
 PING6_HOSTS_1e="$PING6_HOSTS_1"
 
@@ -194,7 +196,7 @@ PING6_HOSTS_2c="$PING6_HOSTS_2"
 #
 
 RUN_TITLE_2d="udp4 / socks proxy [on TCP!] / p2pm / top net30"
-OPENVPN_CONF_2d="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51194 --socks-proxy socks.ov.greenie.net 1080"
+OPENVPN_CONF_2d="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51194 --socks-proxy $SOCKS_PROXY"
 PING4_HOSTS_2d="$PING4_HOSTS_2"
 PING6_HOSTS_2d="$PING6_HOSTS_2"
 
@@ -203,7 +205,7 @@ PING6_HOSTS_2d="$PING6_HOSTS_2"
 #
 
 RUN_TITLE_2e="udp6 / socks proxy [on TCP!] / p2pm / top net30"
-OPENVPN_CONF_2e="$OPENVPN_BASE_P2MP --dev tun --proto udp6 --remote $REMOTE --port 51194 --socks-proxy socks.ov.greenie.net 1080"
+OPENVPN_CONF_2e="$OPENVPN_BASE_P2MP --dev tun --proto udp6 --remote $REMOTE --port 51194 --socks-proxy $SOCKS_PROXY"
 PING4_HOSTS_2e="$PING4_HOSTS_2"
 PING6_HOSTS_2e="$PING6_HOSTS_2"
 
