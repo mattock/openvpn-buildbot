@@ -17,4 +17,4 @@ for DOCKERFILE in $(find -maxdepth 2 -type f -regextype egrep -regex '.*/(Docker
 done
 
 # clean up dangling images and build cache
-docker system prune --force
+docker image prune --force
