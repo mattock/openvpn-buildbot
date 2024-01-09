@@ -16,6 +16,8 @@ This system has been tested on:
 * Vagrant + Virtualbox Windows 10
 * Vagrant + Hyper-V on Windows 10
 * Amazon EC2 Ubuntu 20.04 server instance (t3a.large)
+* Amazon EC2 Ubuntu 22.04 server instance (t3a.large)
+* Amazon EC2 Ubuntu 23.10 server instance (t3a.large)
 
 The whole system is configured to use 8GB of memory. However, it could potentially run in less, because
 all the buildbot workers that do the heavy lifting are latent Docker and EC2 workers. 
