@@ -67,7 +67,26 @@ systemctl daemon-reload
 systemctl restart docker
 
 cd $BASEDIR
+
+# Create dummy certificates. Without this - or real certificates - container
+# image builds will fail.
+#
+# Create dummy Authenticode certificate
+touch buildmaster/authenticode.pfx
+
+# Create dummy t_client ca.crt
+touch t_client/ca.crt
+
+# Create dummy t_client certs and keys.
+for WORKERDIR in $(find -maxdepth 1 -type d -name "buildbot-worker*"); do
+    touch $WORKERDIR/t_client.crt
+    touch $WORKERDIR/t_client.key
+done
+
+# Build all worker containers
 "${BASEDIR}/rebuild-all.sh"
+
+# Create all volumes
 "${BASEDIR}/create-volumes.sh"
 
 touch "${BASEDIR}/.provision.sh-ran"

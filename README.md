@@ -16,6 +16,8 @@ This system has been tested on:
 * Vagrant + Virtualbox Windows 10
 * Vagrant + Hyper-V on Windows 10
 * Amazon EC2 Ubuntu 20.04 server instance (t3a.large)
+* Amazon EC2 Ubuntu 22.04 server instance (t3a.large)
+* Amazon EC2 Ubuntu 23.10 server instance (t3a.large)
 
 The whole system is configured to use 8GB of memory. However, it could potentially run in less, because
 all the buildbot workers that do the heavy lifting are latent Docker and EC2 workers. 
@@ -100,8 +102,31 @@ Then provision the environment:
 
     /full/path/to/buildbot-host/provision.sh
 
+The provisioning script will create dummy t_client and Authenticode
+certificates. This step is required to succesfully build buildbot worker and
+master container images. These dummy certificates will suffice unless you are
+going to run t_client tests or do Windows code signing.
+
 Note that provisioning is only tested on Ubuntu 20.04 server and is unlikely to
 work on any other Ubuntu or Debian version without modifications.
+
+After provisioning you need to create a suitable *master.ini* file based on
+*master-default.ini*. In general two changes should be made:
+
+* Ensure that email address are valid or buildmaster will fail to start
+* Ensure that repository URLs are pointing to a reasonable place (e.g. your own forks on GitHub)
+
+Once you have configured master.ini build the buildmaster container:
+
+    cd /full/path/to/buildbot-host
+    ./rebuild.sh buildmaster
+
+Then launch the buildmaster container, stopping and removing old instances in the process:
+
+    cd /full/path/to/buildbot-host/buildmaster
+    ./launch v2.3.2
+
+Buildbot master should now be listening on port 8010.
 
 # Logging into the Windows VMs from Linux
 
