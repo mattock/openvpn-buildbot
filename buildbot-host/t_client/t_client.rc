@@ -1,4 +1,4 @@
-#
+# -*- shell-script -*-
 # this is sourced from t_client.sh and defines which openvpn client tests
 # to run
 #
@@ -44,15 +44,15 @@ HTTP_PROXY="community-test-proxy.openvpn.in 8080"
 #
 # tests to run (list suffixes for config stanzas below)
 #
-TEST_RUN_LIST="1 1a 1b 1c 1d 1e 2 2a 2b 2c 2d 2e 2f 3 4 4a 4b 5 6"
-#TEST_RUN_LIST="1 1a 1b 1c 1d 1e 2 2a 2b 2c 2d 2e 2f 3 4 4a 4b 5 6 8 8a 9 9a 9b 9x 11 11a"
+TEST_RUN_LIST="1 1a 1b 1c 1d 1e 1f 1g 1h 1i 2 2a 2b 2c 2d 2e 2f 3 4 4a 4b 5 6"
+#TEST_RUN_LIST="1 1a 1b 1c 1d 1e 1f 1g 1h 1i 2 2a 2b 2c 2d 2e 2f 3 4 4a 4b 5 6 8 8a 9 9a 9b 9x 11 11a"
 #TEST_RUN_LIST="1 1a 2 3"
 #TEST_RUN_LIST="1a"
 #TEST_RUN_LIST="1b 1c 1d"
 #TEST_RUN_LIST="1d 1e 2d 2e"	# socks tcp4/tcp6/udp4/udp6
 #TEST_RUN_LIST="2e"	# socks udp6 - does not work - openvpn!
 #TEST_RUN_LIST="1d"
-#TEST_RUN_LIST="1e"		# "used to be: needs 'openssh -D 2222'"
+#TEST_RUN_LIST="1e"
 #TEST_RUN_LIST="2 2a"
 #TEST_RUN_LIST="2d"
 #TEST_RUN_LIST="2d 2e 4 4b"	# normal / v6-only
@@ -141,6 +141,45 @@ RUN_TITLE_1e="tcp6 / socks proxy / p2pm / top net30"
 OPENVPN_CONF_1e="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp6-client --remote $REMOTE --port 51194 --socks-proxy $SOCKS_PROXY"
 PING4_HOSTS_1e="$PING4_HOSTS_1"
 PING6_HOSTS_1e="$PING6_HOSTS_1"
+
+#
+# Test 1f: TCP p2mp tun, IPv4 HTTP proxy, NTLM auth
+#
+
+RUN_TITLE_1f="tcp4 / http proxy ntlm / p2pm / top net30"
+CHECK_SKIP_1f="${top_builddir}/tests/ntlm_support"
+OPENVPN_CONF_1f="$OPENVPN_BASE_P2MP --providers legacy default --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --http-proxy 10.18.0.99 8080 $KEYBASE/t_client_auth.txt ntlm --http-proxy-option VERSION 1.1"
+PING4_HOSTS_1f="$PING4_HOSTS_1"
+PING6_HOSTS_1f="$PING6_HOSTS_1"
+
+#
+# Test 1g: TCP p2mp tun, IPv4 HTTP proxy, NTLMv2 auth
+#
+
+RUN_TITLE_1g="tcp4 / http proxy ntlm2 / p2pm / top net30"
+CHECK_SKIP_1g="${top_builddir}/tests/ntlm_support"
+OPENVPN_CONF_1g="$OPENVPN_BASE_P2MP --providers legacy default --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --http-proxy 10.18.0.99 8080 $KEYBASE/t_client_auth.txt ntlm2 --http-proxy-option VERSION 1.1"
+PING4_HOSTS_1g="$PING4_HOSTS_1"
+PING6_HOSTS_1g="$PING6_HOSTS_1"
+
+#
+# Test 1h: TCP p2mp tun, IPv4 HTTP proxy "auto", no auth
+#
+
+RUN_TITLE_1h="tcp4 / http proxy auto noauth / p2pm / top net30"
+OPENVPN_CONF_1h="$OPENVPN_BASE_P2MP --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --http-proxy community-test-proxy.openvpn.in 8080 auto"
+PING4_HOSTS_1h="$PING4_HOSTS_1"
+PING6_HOSTS_1h="$PING6_HOSTS_1"
+
+#
+# Test 1i: TCP p2mp tun, IPv4 HTTP proxy "auto", NTLM
+#
+
+RUN_TITLE_1i="tcp4 / http proxy auto NTLM / p2pm / top net30"
+CHECK_SKIP_1i="${top_builddir}/tests/ntlm_support"
+OPENVPN_CONF_1i="$OPENVPN_BASE_P2MP --providers legacy default --dev tun3 --proto tcp4-client --remote $REMOTE --port 51194 --http-proxy-user-pass $KEYBASE/t_client_auth.txt --http-proxy 10.18.0.99 8080 auto --http-proxy-option VERSION 1.1"
+PING4_HOSTS_1i="$PING4_HOSTS_1"
+PING6_HOSTS_1i="$PING6_HOSTS_1"
 
 # Test 1x: TCP / p2mp tun / data-cipher none
 #  [fails 3000 byte IPv4 ping, with "TCP/UDP packet too large on write to"]
