@@ -1,0 +1,2 @@
+ENV MBEDTLS_CFLAGS="-I/usr/include/mbedtls2/"
+ENV MBEDTLS_LIBS="-L/usr/lib/mbedtls2/ -lmbedtls -lmbedx509 -lmbedcrypto"
