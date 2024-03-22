@@ -40,6 +40,9 @@ build {
     inline = ["C:/Windows/Temp/scripts/pip.ps1"]
   }
   provisioner "powershell" {
+    inline = ["C:/Windows/Temp/scripts/pwsh.ps1"]
+  }
+  provisioner "powershell" {
     only   = ["amazon-ebs.msibuild-windows-server-2019-2.5"]
     inline = ["C:/Windows/Temp/scripts/vsbuildtools.ps1 -version 2019"]
   }
