@@ -2,10 +2,10 @@ Write-Host "Installing dependencies for building MSI packages"
 
 . $PSScriptRoot\ps_support.ps1
 
-# Chocolatey package bundles WiX version too old for building ARM64 MSIs.
+# Chocolatey package doesn't install correctly
 #& choco.exe install -y wixtoolset
 
-Invoke-WebRequest -Uri "https://build.openvpn.net/downloads/temp/wix314.exe" -Outfile "C:\Windows\Temp\wix314.exe"
+Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314.exe" -Outfile "C:\Windows\Temp\wix314.exe"
 
 & "C:\Windows\Temp\wix314.exe" /q
 CheckLastExitCode

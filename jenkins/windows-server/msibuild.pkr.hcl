@@ -1,11 +1,11 @@
 build {
   source "amazon-ebs.windows-server-2019" {
     name     = "msibuild-windows-server-2019-2.5"
-    ami_name = "msibuild-windows-server-2019-2.5-3"
+    ami_name = "msibuild-windows-server-2019-2.5-4"
   }
   source "amazon-ebs.windows-server-2022" {
     name     = "msibuild-windows-server-2022-2.6"
-    ami_name = "msibuild-windows-server-2022-2.6-4"
+    ami_name = "msibuild-windows-server-2022-2.6-5"
   }
 
   provisioner "file" {
