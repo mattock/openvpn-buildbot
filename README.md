@@ -124,7 +124,7 @@ Once you have configured master.ini build the buildmaster container:
 Then launch the buildmaster container, stopping and removing old instances in the process:
 
     cd /full/path/to/buildbot-host/buildmaster
-    ./launch v2.3.2
+    ./launch.sh v2.5.0
 
 Buildbot master should now be listening on port 8010.
 
