@@ -7,7 +7,7 @@ import re
 with open("version.m4", "r") as version_m4:
     for line in version_m4:
         pvr = re.compile(
-            "define\(\[PRODUCT_VERSION_RESOURCE\],\s\[(\d+,\d+),\d+,\d+\]\)"
+            r"define\(\[PRODUCT_VERSION_RESOURCE\],\s\[(\d+,\d+),\d+,\d+\]\)"
         )
         m = pvr.match(line)
         if m:
