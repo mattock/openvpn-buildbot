@@ -5,23 +5,23 @@
 
 import re
 
-pv={}
+pv = {}
 
-major = re.compile('define\(\[PRODUCT_VERSION_MAJOR\],\s\[(\d+)\]\)')
-minor = re.compile('define\(\[PRODUCT_VERSION_MINOR\],\s\[(\d+)\]\)')
-patch = re.compile('define\(\[PRODUCT_VERSION_PATCH\],\s\[(.*)]\)')
+major = re.compile("define\(\[PRODUCT_VERSION_MAJOR\],\s\[(\d+)\]\)")
+minor = re.compile("define\(\[PRODUCT_VERSION_MINOR\],\s\[(\d+)\]\)")
+patch = re.compile("define\(\[PRODUCT_VERSION_PATCH\],\s\[(.*)]\)")
 
-with open('version.m4', 'r') as version_m4:
+with open("version.m4", "r") as version_m4:
     for line in version_m4:
-         ma = major.match(line)
-         mi = minor.match(line)
-         pa = patch.match(line)
+        ma = major.match(line)
+        mi = minor.match(line)
+        pa = patch.match(line)
 
-         if ma:
-            pv['major'] = ma.group(1)
-         elif mi:
-            pv['minor'] = mi.group(1)
-         elif pa:
-            pv['patch'] = pa.group(1)
+        if ma:
+            pv["major"] = ma.group(1)
+        elif mi:
+            pv["minor"] = mi.group(1)
+        elif pa:
+            pv["patch"] = pa.group(1)
 
-print("%s.%s%s" % (pv['major'], pv['minor'], pv['patch']))
+print("%s.%s%s" % (pv["major"], pv["minor"], pv["patch"]))
