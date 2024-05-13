@@ -4,7 +4,7 @@
 #
 set -ex
 
-BUILDBOT_VERSION=3.9.2
+BUILDBOT_VERSION=3.11.1
 
 # hardcode cryptography version since newer don't work on CentOS 7
 pip3 install $PIP_INSTALL_OPTS --upgrade pip
