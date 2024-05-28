@@ -1,0 +1,10 @@
+[Unit]
+Description=Publish new Debian and Ubuntu packages created by Buildbot workers in aptly repositories
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/local/bin/publish-incoming-debian-snapshots.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

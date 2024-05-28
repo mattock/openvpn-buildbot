@@ -199,6 +199,7 @@ Here's a list of relevant directories:
     * *Dockerfile.base*: a "configuration file" that contains ARG entries that will drive the logic in the main Dockerfile, *snippets/Dockerfile.common*. Used when provisioning the container.
     * *env*: sets environment variables that are required by the worker container (buildmaster, worker name, worker pass). Used when launching *static* containers. Not needed for *latent* workers. In other words, in most cases you can ignore the *env* file.
     * *ec2.pkr.hcl*: Packer code to build EC2 latent buildbot workers
+* *aptly*: files related to Debian/Ubuntu package publishing using aptly; see [buildbot-host/aptly/README.md](buildbot-host/aptly/README.md) for details
 * *scripts*: reusable worker initialization/provisioning scripts
 * *snippets*: configuration fragments; current only the reusable part of the Dockerfile
 
