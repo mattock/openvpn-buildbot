@@ -30,6 +30,7 @@ make \
 mbedtls-dev \
 net-tools \
 pkgconf \
+procps \
 opensc-dev \
 openssh-client \
 openssl-dev \

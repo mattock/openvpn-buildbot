@@ -36,6 +36,7 @@ pam-devel \
 pkcs11-helper-devel \
 pkgconfig \
 polkit \
+procps \
 python3-devel \
 python3-dbus \
 python3-docutils \
