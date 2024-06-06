@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-set -ex
+set -eux
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -9,7 +9,9 @@ export DEBIAN_FRONTEND=noninteractive
 # issues with Docker and OpenVPN.
 apt-get update
 
-apt-get install -y -q --no-install-recommends \
+APT_INSTALL="apt-get install -y -q --no-install-recommends"
+
+$APT_INSTALL \
 autoconf \
 autoconf-archive \
 automake \
@@ -72,10 +74,12 @@ python3-wheel \
 uncrustify \
 uuid-dev
 
+# Only for some distros
+$APT_INSTALL systemd-dev || true
+
 # Install kernel headers for building ovpn-dco. Determining the correct package
 # name is challenging, so just try which ones install and which ones don't
-apt-get install -y -q --no-install-recommends linux-headers-generic || \
-apt-get install -y -q --no-install-recommends linux-headers-amd64
+$APT_INSTALL linux-headers-generic || $APT_INSTALL linux-headers-amd64
 
 # Hack to ensure that kernel headers can be found from a predictable place
 ln -s /lib/modules/$(ls /lib/modules|head -n 1)/build /buildbot/kernel-headers
