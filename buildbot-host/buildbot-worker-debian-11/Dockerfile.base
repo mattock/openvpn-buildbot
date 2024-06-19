@@ -1,5 +1,6 @@
 ARG IMAGE=debian:11
 ARG DEPS_SH=install-openvpn-build-deps-ubuntu.sh
 ARG MY_NAME="buildbot-worker-debian-11"
-ARG MY_VERSION="v1.0.2"
+ARG MY_VERSION="v1.0.3"
 ARG ASIO_REF="asio-1-18-2"
+ARG INSTALL_GDBUSPP="no"
