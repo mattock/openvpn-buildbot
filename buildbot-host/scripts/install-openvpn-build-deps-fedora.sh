@@ -10,7 +10,7 @@ automake \
 bzip2 \
 ccache \
 cmake \
-dbus-c++-devel \
+dbus-devel \
 fping \
 gcc \
 gcc-c++ \

@@ -35,7 +35,7 @@ libasio-dev \
 libcap-dev \
 libcap-ng-dev \
 libcmocka-dev \
-libdbus-c++-dev \
+libdbus-1-dev \
 libdebconfclient0 \
 libdpkg-perl \
 libprotobuf-dev \

@@ -11,7 +11,7 @@ ccache \
 cmake \
 cmocka-dev \
 curl \
-dbus-cpp-dev \
+dbus-dev \
 fping \
 g++ \
 git \
