@@ -11,9 +11,11 @@ ccache \
 cmake \
 cmocka-dev \
 curl \
+dbus-dev \
 fping \
 g++ \
 git \
+glib-dev \
 iproute2 \
 jsoncpp-dev \
 libcap-ng-dev \
@@ -28,9 +30,13 @@ lz4-dev \
 lzo-dev \
 make \
 mbedtls-dev \
+meson \
 net-tools \
 pkgconf \
 procps \
+protobuf \
+protobuf-dev \
+protobuf-c-dev \
 opensc-dev \
 openssh-client \
 openssl-dev \

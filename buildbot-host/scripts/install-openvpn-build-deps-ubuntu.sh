@@ -35,8 +35,10 @@ libasio-dev \
 libcap-dev \
 libcap-ng-dev \
 libcmocka-dev \
+libdbus-1-dev \
 libdebconfclient0 \
 libdpkg-perl \
+libprotobuf-dev \
 libfakeroot \
 libfile-stripnondeterminism-perl \
 libglib2.0-dev \
@@ -55,11 +57,13 @@ libtinyxml2-dev \
 libxml2-utils \
 libxxhash-dev \
 make \
+meson \
 net-tools \
 openssh-client \
 pkg-config \
 po-debconf \
 policykit-1 \
+protobuf-compiler \
 python3 \
 python3-docutils \
 python3-dev \

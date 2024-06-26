@@ -34,12 +34,14 @@ lz4 \
 lzo \
 make \
 mbedtls2 \
+meson \
 openssh \
 openssl \
 pam \
 pkcs11-helper \
 pkgconf \
 polkit \
+protobuf \
 python \
 python-gobject \
 python-pip \

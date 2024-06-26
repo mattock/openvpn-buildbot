@@ -10,6 +10,7 @@ automake \
 bzip2 \
 ccache \
 cmake \
+dbus-devel \
 fping \
 gcc \
 gcc-c++ \
@@ -31,12 +32,16 @@ lzo-devel \
 kernel-devel \
 make \
 mbedtls-devel \
+meson \
 openssl-devel \
 pam-devel \
 pkcs11-helper-devel \
 pkgconfig \
 polkit \
 procps \
+protobuf \
+protobuf-compiler \
+protobuf-devel \
 python3-devel \
 python3-dbus \
 python3-docutils \
