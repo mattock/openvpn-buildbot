@@ -34,7 +34,7 @@ for VOLUME in $(ls $VOLUMES|grep -E $MATCH); do
     aptly repo show $DISTRO > /dev/null 2>&1 || aptly repo create -architectures="amd64" -comment="Buildbot-generated packages for ${DISTRO}" -component="main" -distribution="${DISTRO}" $DISTRO
 done
 
-inotifywait --format "%w%f" --event CREATE --monitor --recursive --include "${INCLUDE}" "${VOLUMES}" |\
+inotifywait --format "%w%f" --event CREATE --monitor --recursive --exclude t_client_ips.rc --exclude ccache "${VOLUMES}"/buildbot-worker-*/_data |\
     while read PACKAGE; do
         $PUBLISH_SCRIPT -p $PACKAGE -f $PASSWORD_FILE $HOOK_PARAMS
     done

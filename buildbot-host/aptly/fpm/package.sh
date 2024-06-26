@@ -47,14 +47,14 @@ fpm \
   --vendor "OpenVPN project" \
   --maintainer "Samuli Seppänen <samuli.seppanen@gmail.com>" \
   --url "https://github.com/OpenVPN/openvpn-buildbot" \
-  --version "0.10.0" \
+  --version "0.11.0" \
   --iteration "1" \
   --after-install "${SRC}/fpm/after-install.sh" \
   --after-upgrade "${SRC}/fpm/after-upgrade.sh" \
   --after-remove "${SRC}/fpm/after-remove.sh" \
   --deb-no-default-config-files \
   -d 'aptly >= 1.5.0' \
-  -d 'inotify-tools >= 3.22.0' \
+  -d 'inotify-tools >= 3.14' \
   -d 'gnupg >= 2.2.0' \
   -d 'pcregrep >= 2' \
   -C "${SRC}/target" \
