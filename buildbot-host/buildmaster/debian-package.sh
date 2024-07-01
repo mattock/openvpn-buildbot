@@ -37,4 +37,5 @@ mv debian-changelog openvpn-$SV/debian/changelog
 cd openvpn-$SV
 dpkg-buildpackage -d -S -uc
 dpkg-buildpackage -b
-cp -v ../*.deb /home/buildbot/
+rm -f /home/buildbot/*.deb /home/buildbot/*.ddeb
+cp -v ../*deb /home/buildbot/
