@@ -4,7 +4,7 @@ set -ex
 usage() {
   echo "Usage: debian-package.sh -w <workername>"
   echo
-  echo "Example: debian-package.sh -w debian-10"
+  echo "Example: debian-package.sh -w debian-unstable"
 }
 
 while getopts "hw:c:s:" arg; do
