@@ -218,6 +218,46 @@ The containers (master and workers) do not require any data to be present on
 the persistent volumes to work. The only exception is the worker password that
 needs to be in a file on buildmaster's persistent volume.
 
+# Building and using additional Docker hosts.
+
+It is possible to point the buildmaster to a remote Docker hosts on a
+worker-by-worker basis. This can be useful, for example, to add builds for
+other processor architectures like arm64.
+
+The remote Docker host can be created like any buildmaster with provision.sh -
+we just don't use the buildmaster container for anything. The Docker daemon on
+the remote Docker host needs to listen on the appropriate network interface.
+This can be accomplished with a systemd override:
+
+```
+# /etc/systemd/system/docker.service.d/override.conf
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://10.29.32.2:2375
+```
+
+For security reasons access to the Docker daemon should be limited to just the
+Buildmaster, e.g. with iptables rules or EC2 security groups.
+
+Once the remote Docker host is ready, you need to configure Buildbot workers.
+For each worker you define which Docker host the Buildmaster uses and which
+Buildmaster (from its perspective) the worker connects to. Here's an example
+from worker.ini:
+
+```
+[debian-11-arm64]
+# Buildbot worker needs to know where the buildmaster lives
+master_fqdn=10.29.32.1
+
+# Buildmaster needs to know which docker host to instantiate the container on
+docker_url=tcp://10.29.32.2:2375
+
+# This refers to the name of the image running on this docker host
+image=openvpn_community/buildbot-worker-debian-11:v1.0.3
+```
+
+The worker-default.ini file has example arm64 workers configured already.
+
 # Development
 
 ## Defining image version and name
