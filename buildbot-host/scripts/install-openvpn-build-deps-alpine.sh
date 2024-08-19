@@ -3,6 +3,7 @@
 set -ex
 
 apk add \
+asio-dev \
 autoconf \
 autoconf-archive \
 automake \
