@@ -62,7 +62,6 @@ net-tools \
 openssh-client \
 pkg-config \
 po-debconf \
-policykit-1 \
 protobuf-compiler \
 python3 \
 python3-docutils \
@@ -80,6 +79,9 @@ uuid-dev
 
 # Only for some distros
 $APT_INSTALL systemd-dev || true
+
+# policykit-1 package was split to two packages in Debian unstable in late 2024
+$APT_INSTALL policykit-1 || $APT_INSTALL polkitd pkexec
 
 # Install kernel headers for building ovpn-dco. Determining the correct package
 # name is challenging, so just try which ones install and which ones don't
