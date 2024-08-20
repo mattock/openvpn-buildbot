@@ -258,6 +258,27 @@ image=openvpn_community/buildbot-worker-debian-11:v1.0.3
 
 The worker-default.ini file has example arm64 workers configured already.
 
+# Configuring build concurrency on Docker hosts
+
+The maximum number of concurrent builds needs to be configured in a JSON
+dictionary in master.ini:
+
+```
+[docker]
+max_builds={ "172.18.0.1": 4, "10.29.32.2": 4 }
+```
+
+The keys must be IP addresses or hostnames. Each key must be present in worker.ini
+as part of a docker_url. For example:
+
+```
+[DEFAULT]
+docker_url=tcp://172.18.0.1:2375
+
+[debian-11-arm64]
+docker_url=tcp://10.29.32.2:2375
+```
+
 # Development
 
 ## Defining image version and name
