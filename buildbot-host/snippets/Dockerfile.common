@@ -11,14 +11,6 @@ RUN set -ex; \
     /buildbot/${DEPS_SH}; \
     rm -f ${DEPS_SH}
 
-# Install gdbuspp, which is a dependency of openvpn3-linux
-ARG INSTALL_GDBUSPP
-COPY scripts/install-gdbuspp.sh /buildbot/
-RUN set -x; \
-    /buildbot/install-gdbuspp.sh; \
-    rm -f install-gdbuspp.sh; \
-    rm -rf /buildbot/gdbuspp
-
 # Install buildbot
 ARG MY_NAME
 ARG PIP_INSTALL_OPTS

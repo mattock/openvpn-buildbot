@@ -3,4 +3,3 @@ ARG DEPS_SH=install-openvpn-build-deps-ubuntu.sh
 ARG MY_NAME="buildbot-worker-ubuntu-2404"
 ARG PIP_INSTALL_OPTS="--break-system-packages"
 ARG MY_VERSION="v1.1.0"
-ARG INSTALL_GDBUSPP="yes"
