@@ -209,6 +209,7 @@ PING6_HOSTS_2="fd00:abcd:194:2::1 fd00:abcd:194:0::1"
 # gert, 20.9.21, add --data-ciphers BF-CBC to force BF-CBC (MTU/frame)
 
 RUN_TITLE_2a="udp4 / p2pm / v6-only / --multihome"
+CHECK_SKIP_2a="${openvpn} --providers legacy default --show-ciphers | grep -q '^BF-CBC  '"
 OPENVPN_CONF_2a="$OPENVPN_BASE_P2MP --dev tun --proto udp4 --remote $REMOTE --port 51194 --route-nopull --route-ipv6 fd00:abcd:194::/48 --multihome --nobind --cipher BF-CBC --data-ciphers BF-CBC --providers legacy default"
 # geht nicht auf FreeBSD
 #if [ `uname -o` = "GNU/Linux" ] ; then
