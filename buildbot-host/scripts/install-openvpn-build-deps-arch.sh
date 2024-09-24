@@ -33,7 +33,7 @@ linux-headers \
 lz4 \
 lzo \
 make \
-mbedtls2 \
+mbedtls \
 meson \
 openssh \
 openssl \
